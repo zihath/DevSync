@@ -11,7 +11,6 @@ const CreateFile: React.FC = () => {
   const { getToken } = useAuth(); // Get function to fetch the JWT
   const [formData, setFormData] = useState({
     name:"",
-    content: "",
     language: "",
   });
   const [response, setResponse] = useState<string | null>(null);
@@ -81,16 +80,7 @@ const CreateFile: React.FC = () => {
           className="w-full p-2 border rounded"
           required
         />
-
-        <textarea
-          name="content"
-          placeholder="Enter file content here..."
-          value={formData.content}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        ></textarea>
-
+        
         <button
           type="submit"
           className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700"

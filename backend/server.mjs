@@ -42,6 +42,8 @@ app.use(clearAuthmiddlleware);
 
 app.use("/api", fileRoutes);
 
+// app.use("/api/liveblocks-auth" , liveblocksroutes);
+
 
 app.listen(port , ()=>{
     console.log(`app is running on port ${port}`);

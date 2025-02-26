@@ -1,10 +1,17 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
-import { EditorView } from "@codemirror/view";
-import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript"; // Add more languages as needed
-import { Trash2 } from "lucide-react";
+// "use client";
+
+import {
+  LiveblocksProvider,
+  RoomProvider,
+  ClientSideSuspense,
+} from "@liveblocks/react/suspense";
+import Editor from "./Editor";
+// import { useLocation, useNavigate } from "react-router-dom";
+
+const VITE_LIVE_BLOCKS_API = import.meta.env.VITE_LIVE_BLOCKS_API;
 
 const FileDetails: React.FC = () => {
   const location = useLocation();
@@ -13,7 +20,7 @@ const FileDetails: React.FC = () => {
 
   const file = location.state?.file;
 
-  const [content, setContent] = useState<string>(file?.content || "");
+  // const [content, setContent] = useState<string>(file?.content || "");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +43,6 @@ const FileDetails: React.FC = () => {
         },
         body: JSON.stringify({
           name: file.name,
-          content: content,
           language: file.language,
         }),
       });
@@ -61,12 +67,13 @@ const FileDetails: React.FC = () => {
       
 
       {/* CodeMirror Editor */}
-      <CodeMirror
-        value={content}
-        extensions={[javascript(), EditorView.lineWrapping]}
-        onChange={(value?: string) => setContent(value || "")}
-        className="border p-2 rounded bg-gray-100"
-      />
+      <LiveblocksProvider publicApiKey = {VITE_LIVE_BLOCKS_API}>
+      <RoomProvider id={file._id}>
+        <ClientSideSuspense fallback={<div>Loading…</div>}>
+          <Editor />
+        </ClientSideSuspense>
+      </RoomProvider>
+      </LiveblocksProvider>
 
       <p className="text-sm text-gray-400 mt-2">
         Created At: {new Date(file.createdAt).toLocaleString()}
@@ -88,3 +95,22 @@ const FileDetails: React.FC = () => {
 };
 
 export default FileDetails;
+
+
+
+
+
+
+// const FileDetails: React.FC = () => {
+
+//     const location = useLocation();
+
+//     const file = location.state?.file;
+
+
+
+//   return (
+    
+//   );
+// }
+// export default FileDetails;
