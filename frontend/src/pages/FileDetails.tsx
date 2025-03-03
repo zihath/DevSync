@@ -9,6 +9,8 @@ import {
   ClientSideSuspense,
 } from "@liveblocks/react/suspense";
 import Editor from "./Editor";
+import AddCollaborator from "./AddCollab";
+// import AddCollaborator from "./AddCollab";
 // import { useLocation, useNavigate } from "react-router-dom";
 
 const VITE_LIVE_BLOCKS_API = import.meta.env.VITE_LIVE_BLOCKS_API;
@@ -75,6 +77,9 @@ const FileDetails: React.FC = () => {
       </RoomProvider>
       </LiveblocksProvider>
 
+      {/* <AddCollaborator fileId={file._id} /> */}
+
+
       <p className="text-sm text-gray-400 mt-2">
         Created At: {new Date(file.createdAt).toLocaleString()}
       </p>
@@ -90,6 +95,9 @@ const FileDetails: React.FC = () => {
       >
         {loading ? "Updating..." : "Save Changes"}
       </button>
+      {/* console.log(file._Id) */}
+
+      <AddCollaborator fileId={file._id} />
     </div>
   );
 };

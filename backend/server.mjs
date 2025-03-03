@@ -38,6 +38,8 @@ app.get('/' , (req , res) => {
     res.send(users);
 });
 
+
+
 app.use(clearAuthmiddlleware);
 
 app.use("/api", fileRoutes);

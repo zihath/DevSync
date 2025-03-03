@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
-import CreateFile from "./CreateFile";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../Component/ui/button" // Import shadcn Button component
+import { Button } from "@/Component/ui/button"; // Updated path for consistency
+import CreateFile from "./CreateFile";
+import JoinAsCollaborator from "./JoinCollab";
 
 const DashBoard: React.FC = () => {
   const { getToken } = useAuth();
@@ -11,6 +12,7 @@ const DashBoard: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showJoinForm, setShowJoinForm] = useState(false);
 
   const fetchFiles = async () => {
     if (!user?.id) {
@@ -46,7 +48,6 @@ const DashBoard: React.FC = () => {
     }
   };
 
-  // Optional: automatically fetch files when the user becomes available
   useEffect(() => {
     if (user?.id) {
       fetchFiles();
@@ -54,45 +55,48 @@ const DashBoard: React.FC = () => {
   }, [user]);
 
   return (
+    <div className="p-6 max-w-xl mx-auto bg-white rounded-lg shadow-md space-y-4">
+      <Button onClick={() => navigate("/CreateFile")} className="w-full">
+        Create New File
+      </Button>
 
-    <div className="p-4 max-w-lg mx-auto bg-white rounded-lg shadow-md">
+      <h2 className="text-lg font-semibold">User Files</h2>
 
-    <button
-      onClick={() => navigate("/CreateFile")}
-      className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-    >
-      Create New File
-    </button>
+      <Button onClick={fetchFiles} disabled={loading} variant="outline" className="w-full">
+        {loading ? "Loading..." : "Fetch Files"}
+      </Button>
 
-      <h2 className="text-lg font-semibold mb-4">User Files</h2>
-
-      <button onClick={fetchFiles} disabled={loading}>
-        {loading ? "Loading...." : "Fetch Files"}
-      </button>
-
-      {error && <p className="mt-4 text-red-600">❌ {error}</p>}
+      {error && <p className="text-red-600 text-sm">❌ {error}</p>}
 
       {data.length > 0 && (
-        <div className="mt-4 p=2 border-t">
-
-
+        <div className="mt-4 space-y-2 border-t pt-2">
           {data.map((file) => (
-            <div key={file._id} className="flex flex-col gap-2"> {/* Vertical layout with gap */}
-              <Button
-                variant="outline" // Use shadcn's Button component with outline variant
-                onClick={() => navigate(`/file/${file._id}`, { state: { file } })}
-                className="w-full text-left" // Full width and left-aligned text
-              >
-                <span className="font-semibold">{file.name}</span> -{" "}
-                <span className="text-blue-500">{file.language}</span>
-              </Button>
-            </div>
+            <Button
+              key={file._id}
+              variant="outline"
+              onClick={() => navigate(`/file/${file._id}`, { state: { file } })}
+              className="w-full justify-start text-left"
+            >
+              <span className="font-semibold">{file.name}</span> - <span className="text-blue-500">{file.language}</span>
+            </Button>
           ))}
-
         </div>
       )}
 
-      {/* <CreateFile /> */}
+      <Button onClick={() => setShowJoinForm(true)} variant="secondary" className="w-full">
+        Join a Room
+      </Button>
+
+      {showJoinForm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            <button className="absolute top-2 right-2 text-gray-500" onClick={() => setShowJoinForm(false)}>
+              ✖
+            </button>
+            <JoinAsCollaborator />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
