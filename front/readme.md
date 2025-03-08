@@ -1,0 +1,8 @@
+- npm install -g pnpm
+- cd frontend
+- pnpm create vite ./
+- pnpm install
+- pnpm add -D tailwindcss@3.4.17 postcss autoprefixer
+- pnpm tailwindcss init -p
+- pnpm dlx shadcn@latest init
+- pnpm add @clerk/clerk-react
