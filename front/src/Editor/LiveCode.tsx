@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
 import { useRoom } from "@liveblocks/react/suspense";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-import ProgrammingLanguages from "@/components/ProgrammingLanguages";
+// import ProgrammingLanguages from "@/components/SelectLanguages";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -19,18 +19,25 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { OutputPanel } from "./OutputPanel";
+import { useLocation } from "react-router-dom";
 
 const fixedSizeTheme = EditorView.theme({
   "&": { width: "full", height: "100vh" },
   ".cm-scroller": { overflow: "hidden" },
 });
 
-const LiveCode = () => {
+const LiveCode = ({ language }: { language: string | null }) => {
   const room = useRoom();
   const [element, setElement] = useState<HTMLElement | null>(null);
-  const [language, setLanguage] = useState("javascript");
   const [editorView, setEditorView] = useState<EditorView | null>(null);
   const [ydoc, setYDoc] = useState<Y.Doc | null>(null);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const roomId = queryParams.get("room");
+
+  console.log(roomId);
+  console.log(language);
 
   const ref = useCallback((node: HTMLElement | null) => {
     if (node) setElement(node);
@@ -86,10 +93,6 @@ const LiveCode = () => {
     return cleanup;
   }, [element, room, language]);
 
-  const handleLanguage = (currentValue: string) => {
-    setLanguage(currentValue);
-  };
-
   const handleReset = () => {
     if (ydoc) {
       ydoc.getText("codemirror").delete(0, ydoc.getText("codemirror").length);
@@ -98,9 +101,11 @@ const LiveCode = () => {
 
   return (
     <div className="w-full h-full flex flex-col p-2 bg-black">
-      <div className="flex justify-between items-center mb-2">
-        <ProgrammingLanguages handleLanguage={handleLanguage} />
-        <Button onClick={handleReset} className="">
+      <div className="flex justify-between items-center">
+        <h1 className="text-white pl-10 font-medium">
+          {language && language.toUpperCase()}
+        </h1>
+        <Button onClick={handleReset} className="p-4 m-2">
           Reset
         </Button>
       </div>

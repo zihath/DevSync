@@ -7,6 +7,8 @@ import { neobrutalism } from "@clerk/themes";
 
 import { LiveblocksProvider } from "@liveblocks/react/suspense";
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const LIVEBLOCKS_PUBLIC_KEY = import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY;
@@ -16,15 +18,17 @@ if (!PUBLISHABLE_KEY) {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ClerkProvider
-      appearance={{
-        baseTheme: neobrutalism,
-      }}
-      publishableKey={PUBLISHABLE_KEY}
-    >
-      <LiveblocksProvider publicApiKey={LIVEBLOCKS_PUBLIC_KEY}>
-        <App />
-      </LiveblocksProvider>
-    </ClerkProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ClerkProvider
+        appearance={{
+          baseTheme: neobrutalism,
+        }}
+        publishableKey={PUBLISHABLE_KEY}
+      >
+        <LiveblocksProvider publicApiKey={LIVEBLOCKS_PUBLIC_KEY}>
+          <App />
+        </LiveblocksProvider>
+      </ClerkProvider>
+    </ThemeProvider>
   </StrictMode>
 );

@@ -20,6 +20,7 @@ const App = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/live-code" element={<LiveCodeWrapper />} />
+          {/* <Route path="" */}
         </Route>
       </Routes>
     </BrowserRouter>
