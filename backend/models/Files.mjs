@@ -6,9 +6,9 @@ const fileSchema = new mongoose.Schema({
   language: { type: String, required: true },
   collaborators: [
     {
-      userId: { type: String, ref: 'User', required: true },
-      role: { type: String, enum: ['editor', 'viewer'], default: 'editor' }
-    }
+      userId: { type: String, ref: "User", required: true },
+      role: { type: String, enum: ["editor", "viewer"], default: "editor" },
+    },
   ],
   createdAt: { type: Date, default: Date.now },
 });

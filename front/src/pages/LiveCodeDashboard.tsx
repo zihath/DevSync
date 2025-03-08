@@ -10,13 +10,15 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
+import FileCards from "@/components/RoomCard";
+
 const LiveCodeDashboard = () => {
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState("");
 
-  const createRoom = (formData: { room_name: string }) => {
+  const createRoom = () => {
     const newRoomId = crypto.randomUUID();
-    navigate(`/live-code?room=${newRoomId}&lang=${selectedLanguage}`);
+    navigate(`/live-code/${newRoomId}?lang=${selectedLanguage}`);
   };
 
   const joinRoom = (formData: { room_id: string }) => {
@@ -29,6 +31,23 @@ const LiveCodeDashboard = () => {
     console.log("Deleting room:", formData.delete_room_id);
     // we need to figure the delete room logic bruh
   };
+  const sampleFiles = [
+    {
+      filename: "index.html",
+      fileType: "html",
+      createdAt: "2025-02-15T14:32:00",
+    },
+    {
+      filename: "styles.css",
+      fileType: "css",
+      createdAt: "2025-02-20T09:15:00",
+    },
+    {
+      filename: "app.js",
+      fileType: "javascript",
+      createdAt: "2025-03-01T16:45:00",
+    },
+  ];
 
   return (
     <SidebarProvider>
@@ -82,7 +101,7 @@ const LiveCodeDashboard = () => {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            {" "}
+            <FileCards files={sampleFiles} />
           </div>
         </div>
       </SidebarInset>

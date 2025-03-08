@@ -5,6 +5,7 @@ import HomePage from "./routes/HomePage";
 import SingInPage from "./routes/SingInPage";
 import SingUpPage from "./routes/SingUpPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import LiveCodeDashboard from "./pages/LiveCodeDashboard";
 import LiveCodeWrapper from "./Editor/LiveCodeWrapper";
 
 const App = () => {
@@ -19,8 +20,8 @@ const App = () => {
         </Route>
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/live-code" element={<LiveCodeWrapper />} />
-          {/* <Route path="" */}
+          <Route path="/live-code" element={<LiveCodeDashboard />} />
+          <Route path="/live-code/:roomId" element={<LiveCodeWrapper />} />
         </Route>
       </Routes>
     </BrowserRouter>

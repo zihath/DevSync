@@ -10,7 +10,6 @@ import { useCallback, useEffect, useState } from "react";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
 import { useRoom } from "@liveblocks/react/suspense";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-// import ProgrammingLanguages from "@/components/SelectLanguages";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -19,22 +18,24 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { OutputPanel } from "./OutputPanel";
-import { useLocation } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 const fixedSizeTheme = EditorView.theme({
   "&": { width: "full", height: "100vh" },
   ".cm-scroller": { overflow: "hidden" },
 });
 
-const LiveCode = ({ language }: { language: string | null }) => {
+const LiveCode = () => {
   const room = useRoom();
   const [element, setElement] = useState<HTMLElement | null>(null);
   const [editorView, setEditorView] = useState<EditorView | null>(null);
   const [ydoc, setYDoc] = useState<Y.Doc | null>(null);
 
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const roomId = queryParams.get("room");
+  const { roomId } = useParams();
+  const [searchParams] = useSearchParams();
+  const language = searchParams.get("lang");
+
+  const [showOutput, setShowOutput] = useState(false);
 
   console.log(roomId);
   console.log(language);
@@ -99,12 +100,21 @@ const LiveCode = ({ language }: { language: string | null }) => {
     }
   };
 
+  const handleToggleOutput = () => {
+    setShowOutput((prev) => !prev);
+  };
+
   return (
     <div className="w-full h-full flex flex-col p-2 bg-black">
       <div className="flex justify-between items-center">
         <h1 className="text-white pl-10 font-medium">
           {language && language.toUpperCase()}
         </h1>
+        <div className="flex gap-2">
+          <Button onClick={handleToggleOutput} className="p-4 m-2">
+            {showOutput ? "Hide Output" : "Show Output"}
+          </Button>
+        </div>
         <Button onClick={handleReset} className="p-4 m-2">
           Reset
         </Button>
@@ -121,7 +131,7 @@ const LiveCode = ({ language }: { language: string | null }) => {
         <ResizableHandle className="border-[2px] border-black" />
 
         <ResizablePanel>
-          <OutputPanel />
+          <OutputPanel code={ydoc?.getText("codemirror").toString() || ""} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
