@@ -18,7 +18,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { OutputPanel } from "./OutputPanel";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const fixedSizeTheme = EditorView.theme({
   "&": { width: "full", height: "100vh" },
@@ -31,14 +31,10 @@ const LiveCode = () => {
   const [editorView, setEditorView] = useState<EditorView | null>(null);
   const [ydoc, setYDoc] = useState<Y.Doc | null>(null);
 
-  const { roomId } = useParams();
   const [searchParams] = useSearchParams();
   const language = searchParams.get("lang");
 
   const [showOutput, setShowOutput] = useState(false);
-
-  console.log(roomId);
-  console.log(language);
 
   const ref = useCallback((node: HTMLElement | null) => {
     if (node) setElement(node);

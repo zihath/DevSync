@@ -35,6 +35,10 @@ const Modal = ({
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  const handleSubmit = () => {
+    console.log("Submitting formData:", formData); // Debug formData
+    onSubmit(formData);
+  };
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -66,7 +70,7 @@ const Modal = ({
         </div>
 
         <DialogFooter>
-          <Button type="button" onClick={() => onSubmit(formData)}>
+          <Button type="button" onClick={handleSubmit}>
             {buttonName}
           </Button>
         </DialogFooter>

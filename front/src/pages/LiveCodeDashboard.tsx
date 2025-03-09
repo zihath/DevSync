@@ -12,23 +12,82 @@ import {
 
 import FileCards from "@/components/RoomCard";
 
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/appStore";
+
 const LiveCodeDashboard = () => {
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const user = useSelector((state: RootState) => state.user);
+  // console.log(user);
 
-  const createRoom = () => {
-    const newRoomId = crypto.randomUUID();
-    navigate(`/live-code/${newRoomId}?lang=${selectedLanguage}`);
+  const createRoom = async (formData: { file_name: string }) => {
+    // console.log("file name : ", formData.file_name);
+    // console.log("lang : ", selectedLanguage);
+    if (!formData.file_name || !selectedLanguage) {
+      alert("File name and langauge are required!!!");
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/rooms/create-room/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fileName: formData.file_name,
+            language: selectedLanguage,
+            createdBy: user.clerkId,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Room created successfully:", data);
+        navigate(`/live-code/${data.room.roomId}?lang=${selectedLanguage}`);
+      } else {
+        console.error("Error creating room:", data.message);
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to create room.");
+    }
   };
 
-  const joinRoom = (formData: { room_id: string }) => {
-    if (formData.room_id.trim()) {
-      navigate(`/live-code?room=${formData.room_id}`);
+  const joinRoom = async (formData: { room_id: string }) => {
+    if (!formData.room_id) {
+      alert("Room id needed!!!");
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/rooms/join-room/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            roomId: formData.room_id,
+            clerkId: user.clerkId,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        navigate(`/live-code/${data.room.roomId}`);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to join room.");
     }
   };
 
   const deleteRoom = (formData: { delete_room_id: string }) => {
-    console.log("Deleting room:", formData.delete_room_id);
+    // console.log("Deleting room:", formData.delete_room_id);
     // we need to figure the delete room logic bruh
   };
   const sampleFiles = [
@@ -66,7 +125,7 @@ const LiveCodeDashboard = () => {
             fields={[
               {
                 label: "File Name",
-                id: "room_name",
+                id: "file_name",
                 placeholder: "Enter file name",
               },
             ]}
