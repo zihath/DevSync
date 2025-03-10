@@ -1,1 +1,0 @@
-created frontend using : npm create vite@latest frontend --template react

@@ -19,7 +19,12 @@ const SelectProgrammingLanguages = ({
       <Label htmlFor="language" className="text-right">
         Language
       </Label>
-      <Select onValueChange={onSelect}>
+      <Select
+        onValueChange={(value) => {
+          console.log("Selected value from dropdown:", value); // Debug log
+          onSelect(value);
+        }}
+      >
         <SelectTrigger className="col-span-3">
           <SelectValue placeholder="Pick a language" />
         </SelectTrigger>
