@@ -17,34 +17,23 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-<<<<<<< HEAD
-// import { OutputPanel } from "./OutputPanel";
-import OutputPanel from "./OutputPanel";
-import { useParams, useSearchParams } from "react-router-dom";
-||||||| bfdcd78
-import { OutputPanel } from "./OutputPanel";
-import { useParams, useSearchParams } from "react-router-dom";
-=======
 import { OutputPanel } from "./OutputPanel";
 import { useSearchParams } from "react-router-dom";
->>>>>>> origin/main
 
 const fixedSizeTheme = EditorView.theme({
   "&": { width: "full", height: "100vh" },
   ".cm-scroller": { overflow: "hidden" },
 });
 
-const InputPanel = ({setText} : {setText : (text : string) => void }) => {
-  return(
+const InputPanel = ({ setText }: { setText: (text: string) => void }) => {
+  return (
     <textarea
       className="w-full h-full p-2 border resize-none bg-black text-white"
       placeholder="Type the input here... "
-      onChange={(e)=>setText(e.target.value)}
+      onChange={(e) => setText(e.target.value)}
     />
   );
 };
-
-
 
 const LiveCode = () => {
   const room = useRoom();
@@ -52,15 +41,6 @@ const LiveCode = () => {
   const [editorView, setEditorView] = useState<EditorView | null>(null);
   const [ydoc, setYDoc] = useState<Y.Doc | null>(null);
 
-<<<<<<< HEAD
-
-
-
-  const { roomId } = useParams();
-||||||| bfdcd78
-  const { roomId } = useParams();
-=======
->>>>>>> origin/main
   const [searchParams] = useSearchParams();
   const language = searchParams.get("lang");
 
@@ -132,9 +112,9 @@ const LiveCode = () => {
 
   const [text, setText] = useState("");
   const [showInput, setShowInput] = useState(false);
-  
+
   const [latestText, setLatestText] = useState(text);
-  const [latestCode, setLatestCode] = useState('');
+  const [latestCode, setLatestCode] = useState("");
   useEffect(() => {
     setLatestText(text);
   }, [text]);
@@ -144,18 +124,14 @@ const LiveCode = () => {
 
     const yText = ydoc.getText("codemirror");
 
-    
     const updateCode = () => {
       setLatestCode(yText.toString());
     };
 
-    
     updateCode();
 
-   
     yText.observe(updateCode);
 
-    
     return () => {
       yText.unobserve(updateCode);
     };
@@ -190,38 +166,35 @@ const LiveCode = () => {
         <ResizablePanel defaultSize={50}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={showInput ? 50 : 100}>
-                <OutputPanel 
-                  stdin={latestText} 
-                  code={latestCode}
-                  language = {language}
-                />
-              </ResizablePanel>
+              <OutputPanel
+                stdin={latestText}
+                code={latestCode}
+                language={language}
+              />
+            </ResizablePanel>
 
-              {showInput && (
-                <>
-                  {/* Resizable Handle Between Output & Input Panels */}
-                  <ResizableHandle className="border-[2px] border-black" />
+            {showInput && (
+              <>
+                {/* Resizable Handle Between Output & Input Panels */}
+                <ResizableHandle className="border-[2px] border-black" />
 
-                  {/* Input Panel (Appears on Button Click) */}
-                  <ResizablePanel defaultSize={50}>
-                    <InputPanel setText={setText} />
-                  </ResizablePanel>
-                </>
-              )}
+                {/* Input Panel (Appears on Button Click) */}
+                <ResizablePanel defaultSize={50}>
+                  <InputPanel setText={setText} />
+                </ResizablePanel>
+              </>
+            )}
+          </ResizablePanelGroup>
 
-
-            </ResizablePanelGroup>
-          
-            <div className="absolute bottom-2 right-2">
-              <button
-                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                onClick={() => setShowInput(!showInput)}
-              >
-                {showInput ? "Hide Input" : "Show Input"}
-              </button>
-            </div>
-
-          </ResizablePanel>
+          <div className="absolute bottom-2 right-2">
+            <button
+              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              onClick={() => setShowInput(!showInput)}
+            >
+              {showInput ? "Hide Input" : "Show Input"}
+            </button>
+          </div>
+        </ResizablePanel>
       </ResizablePanelGroup>
     </div>
   );
