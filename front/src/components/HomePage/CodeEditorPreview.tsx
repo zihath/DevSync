@@ -16,7 +16,7 @@ const CodeEditor = () => {
   const [code, setCode] = useState(files[activeFile]);
 
   return (
-    <div className="w-full min-h-screen bg-black flex flex-col items-center py-10">
+    <div className="w-full min-h-screen bg-transparent flex flex-col items-center py-10">
       <motion.div
         className="w-full text-center mb-8"
         initial={{ opacity: 0, y: -20 }}

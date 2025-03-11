@@ -6,6 +6,8 @@ import { HeaderRoutes } from "@/lib/helper";
 import { useNavigate } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
 import { useUser } from "@clerk/clerk-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -98,6 +100,9 @@ const Header = () => {
                 </Button>
               </>
             )}
+            <div className="ml-2">
+              <ThemeToggle />
+            </div>
           </div>
 
           <div className="md:hidden flex items-center">
