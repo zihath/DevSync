@@ -24,9 +24,19 @@ const AnimatedBackground = () => {
   return (
     <div
       ref={spotlightRef}
-      className="absolute inset-0 spotlight -z-10"
+      className="absolute inset-0 -z-10"
       aria-hidden="true"
+      style={{
+        background: `
+          radial-gradient(
+            circle at var(--x, 50%) var(--y, 50%),
+            rgba(255, 255, 255, 0.05) 0%,
+            transparent 80px
+          )
+        `,
+      }}
     >
+      {/* Gradient borders (optional) */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
     </div>

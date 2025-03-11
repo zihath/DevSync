@@ -1,98 +1,135 @@
-import { Button } from "@/components/ui/button";
-import {
-  Code,
-  Share2,
-  Layout,
-  Layers,
-  ArrowRight,
-  Cpu,
-  Terminal,
-} from "lucide-react";
+import { useEffect } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
+import AnimatedBackground from "@/components/HomePage/AnimatedBackground";
+import Header from "@/components/HomePage/Header";
+import HeroSection from "@/components/HomePage/HeroSection";
+import FeaturesGrid from "@/components/HomePage/FeaturesGrid";
+import AdvancedFeatures from "@/components/HomePage/AdvancedFeatures";
+import CodeEditorPreview from "@/components/HomePage/CodeEditorPreview";
+import Testimonials from "@/components/HomePage/Testimonials";
+import CallToAction from "@/components/HomePage/CallToAction";
+import Footer from "@/components/HomePage/Footer";
 
 const HomePage = () => {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  // Preload animations
+  useEffect(() => {
+    const links = document.querySelectorAll('a[href^="#"]');
+
+    links.forEach((link) => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const href = link.getAttribute("href");
+        if (!href) return;
+
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
+      });
+    });
+  }, []);
+
   return (
-    <div className="min-h-screen w-full bg-black text-white flex flex-col">
-      <div className="mx-auto px-4 py-16 text-center flex-grow">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-6">
-            <span className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm inline-flex items-center">
-              <Code className="mr-2 h-4 w-4 text-blue-400" />
-              Real-time Collaborative Coding Platform
-            </span>
-          </div>
+    <div className="relative home-page">
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-primary/80 z-50 origin-left"
+        style={{ scaleX }}
+      />
 
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-            Code Together, Learn Together
-          </h1>
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] opacity-95" />
 
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Revolutionize your coding experience with instant collaboration,
-            integrated DSA practice, and a powerful web development environment.
-          </p>
+        <motion.div
+          className="absolute top-20 left-10 w-32 h-32 bg-purple-900/50 blur-2xl rounded-full"
+          animate={{ x: [0, 30, 0], y: [0, 15, 0] }}
+          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-10 right-10 w-48 h-48 bg-cyan-900/50 blur-xl rounded-full"
+          animate={{ x: [0, -25, 0], y: [0, -10, 0] }}
+          transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+        />
 
-          <div className="flex justify-center space-x-4 mb-12">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-              Start Coding
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-              Learn More
-            </Button>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="bg-gray-900 p-6 rounded-lg border border-gray-800">
-              <Share2 className="h-10 w-10 text-green-400 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Live Collaboration</h3>
-              <p className="text-gray-400">
-                Code in real-time with teammates, students, or mentors.
-              </p>
-            </div>
-
-            <div className="bg-gray-900 p-6 rounded-lg border border-gray-800">
-              <Layout className="h-10 w-10 text-purple-400 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">
-                Web Dev Environment
-              </h3>
-              <p className="text-gray-400">
-                Integrated HTML, CSS, and JavaScript editor with instant
-                preview.
-              </p>
-            </div>
-
-            <div className="bg-gray-900 p-6 rounded-lg border border-gray-800">
-              <Cpu className="h-10 w-10 text-red-400 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">DSA Practice</h3>
-              <p className="text-gray-400">
-                Built-in data structures and algorithms playground.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-16 grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-gray-900 p-8 rounded-lg border border-gray-800 text-left">
-              <Terminal className="h-12 w-12 text-blue-400 mb-4" />
-              <h2 className="text-2xl font-bold mb-4">Web Development</h2>
-              <ul className="space-y-2 text-gray-300">
-                <li>• Instant HTML/CSS/JS Editing</li>
-                <li>• Live Preview Pane</li>
-                <li>• Syntax Highlighting</li>
-                <li>• Auto-Complete</li>
-              </ul>
-            </div>
-            <div className="bg-gray-900 p-8 rounded-lg border border-gray-800 text-left">
-              <Layers className="h-12 w-12 text-green-400 mb-4" />
-              <h2 className="text-2xl font-bold mb-4">DSA Features</h2>
-              <ul className="space-y-2 text-gray-300">
-                <li>• Algorithm Visualization</li>
-                <li>• Code Execution</li>
-                <li>• Time & Space Complexity</li>
-                <li>• Problem Set Library</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        <svg
+          className="absolute inset-0 w-full h-full opacity-40"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 800 600"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            <pattern
+              id="lighterGridPattern"
+              width="10"
+              height="10"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 20 0 L 0 0 0 20"
+                fill="none"
+                stroke="#333333"
+                strokeWidth="0.8"
+                opacity="0.3"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#lighterGridPattern)" />
+        </svg>
       </div>
+
+      <div className="relative min-h-screen w-full text-white flex flex-col">
+        <AnimatedBackground />
+        <Header />
+
+        <main className="flex-grow">
+          <HeroSection />
+
+          <section id="features" className="py-16 px-4">
+            <FeaturesGrid />
+            <AdvancedFeatures />
+          </section>
+
+          <section id="editor" className="overflow-hidden">
+            <CodeEditorPreview />
+          </section>
+
+          <section id="testimonials">
+            <Testimonials />
+          </section>
+
+          <section id="cta">
+            <CallToAction />
+          </section>
+        </main>
+
+        <Footer />
+      </div>
+
+      {/* Vignette Overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(
+              circle at center,
+              transparent 50%,
+              rgba(0, 0, 0, 0.5) 90%,
+              rgba(0, 0, 0, 0.8) 100%
+            )
+          `,
+          mixBlendMode: "multiply",
+          zIndex: 5,
+        }}
+      />
     </div>
   );
 };
