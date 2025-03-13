@@ -1,4 +1,4 @@
-/* @tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -94,6 +94,25 @@
   body {
     @apply bg-background text-foreground antialiased;
   }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
 }
 
 @layer components {
@@ -144,5 +163,35 @@
 
   .shimmer::before {
     @apply content-[''] absolute top-0 -left-[100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-25deg] animate-shimmer;
+  }
+}
+
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-md bg-white/5 border border-white/10 rounded-lg shadow-lg;
+  }
+
+  .editor-button {
+    @apply px-3 py-1.5 rounded-md font-medium transition-all duration-200
+    hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 
+    focus:ring-opacity-50;
+  }
+  
+  .highlight-hover {
+    @apply transition-all duration-300 hover:brightness-110;
+  }
+
+  .panel-transition {
+    @apply transition-all duration-300 ease-in-out;
   }
 }

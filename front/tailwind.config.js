@@ -45,6 +45,23 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        editor: {
+          background: "#1e1e1e",
+          foreground: "#f8f8f8",
+          accent: "#0078d4",
+          success: "#4caf50",
+          warning: "#ff9800",
+          error: "#e53935",
+          panelBg: "#252526",
+          inputBg: "#2d2d2d"
+        },
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))"
+          },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -103,6 +120,7 @@ module.exports = {
           "100%": { backgroundPosition: "700px 0" },
         },
       },
+      
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
