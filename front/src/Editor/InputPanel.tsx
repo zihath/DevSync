@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface InputPanelProps {
   setText: (text: string) => void;
@@ -7,7 +7,7 @@ interface InputPanelProps {
 }
 
 const InputPanel = ({ setText, className }: InputPanelProps) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;

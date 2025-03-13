@@ -21,6 +21,7 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@codemirror/view": "^6.36.4",
+    "@excalidraw/excalidraw": "^0.18.0",
     "@liveblocks/client": "^2.20.0",
     "@liveblocks/react": "^2.20.0",
     "@liveblocks/yjs": "^2.20.0",

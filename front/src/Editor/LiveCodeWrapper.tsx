@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ClientSideSuspense, RoomProvider } from "@liveblocks/react";
 import LoaderPage from "@/views/LoaderPage";
-import LiveCode from "./LiveCode";
+import LiveCodeEditor from "./LiveCodeEditor";
 import LiveCodeDashboard from "../pages/LiveCodeDashboard";
 
 const LiveCodeWrapper = () => {
@@ -15,17 +15,15 @@ const LiveCodeWrapper = () => {
 
   return (
     <div className="flex flex-col h-screen bg-editor-background mb-0">
-      <div className="container mx-auto mb-0">
       {isValid ? (
         <RoomProvider id={roomId!}>
           <ClientSideSuspense fallback={<LoaderPage />}>
-            <LiveCode />
+            <LiveCodeEditor />
           </ClientSideSuspense>
         </RoomProvider>
       ) : (
         <LiveCodeDashboard />
       )}
-      </div>
     </div>
   );
 };
