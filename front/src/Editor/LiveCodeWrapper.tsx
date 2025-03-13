@@ -14,7 +14,8 @@ const LiveCodeWrapper = () => {
   }, [roomId]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-editor-background mb-0">
+      <div className="container mx-auto mb-0">
       {isValid ? (
         <RoomProvider id={roomId!}>
           <ClientSideSuspense fallback={<LoaderPage />}>
@@ -24,6 +25,7 @@ const LiveCodeWrapper = () => {
       ) : (
         <LiveCodeDashboard />
       )}
+      </div>
     </div>
   );
 };

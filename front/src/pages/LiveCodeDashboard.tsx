@@ -45,7 +45,7 @@ const LiveCodeDashboard = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Room created successfully:", data);
-        navigate(`/live-code/${data.room.roomId}?lang=${selectedLanguage}`);
+        navigate(`/live-code/${data.room.roomId}?lang=${selectedLanguage}&filename=${formData.file_name}`);
       } else {
         console.error("Error creating room:", data.message);
         alert(data.message);

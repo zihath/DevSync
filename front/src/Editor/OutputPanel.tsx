@@ -247,7 +247,8 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ stdin, code, language, classN
         }
       );
       setOutput(response.data.run.output);
-      setStatus(response.data.run.output ? 'success' : 'warning');
+      console.log(response.data.run);
+      setStatus(response.data.run.code===0 ? 'success' : 'warning');
       toast.success('Code executed successfully');
     } catch (error: any) {
       console.error('Error executing code:', error.response?.data || error.message);
