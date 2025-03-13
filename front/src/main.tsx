@@ -19,20 +19,20 @@ if (!PUBLISHABLE_KEY) {
 }
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <Provider store={appStore}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <ClerkProvider
-          appearance={{
-            baseTheme: neobrutalism,
-          }}
-          publishableKey={PUBLISHABLE_KEY}
-        >
-          <LiveblocksProvider publicApiKey={LIVEBLOCKS_PUBLIC_KEY}>
-            <App />
-          </LiveblocksProvider>
-        </ClerkProvider>
-      </ThemeProvider>
-    </Provider>
-  </StrictMode>
+  // <StrictMode>
+  <Provider store={appStore}>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ClerkProvider
+        appearance={{
+          baseTheme: neobrutalism,
+        }}
+        publishableKey={PUBLISHABLE_KEY}
+      >
+        <LiveblocksProvider publicApiKey={LIVEBLOCKS_PUBLIC_KEY}>
+          <App />
+        </LiveblocksProvider>
+      </ClerkProvider>
+    </ThemeProvider>
+  </Provider>
+  // </StrictMode>
 );
