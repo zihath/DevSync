@@ -37,7 +37,7 @@ const LiveCodeDashboard = () => {
           body: JSON.stringify({
             fileName: formData.file_name,
             language: selectedLanguage,
-            createdBy: user.clerkId,
+            createdBy: user,
           }),
         }
       );
@@ -45,7 +45,9 @@ const LiveCodeDashboard = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Room created successfully:", data);
-        navigate(`/live-code/${data.room.roomId}?lang=${selectedLanguage}&filename=${formData.file_name}`);
+        navigate(
+          `/live-code/${data.room.roomId}?lang=${selectedLanguage}&filename=${formData.file_name}`
+        );
       } else {
         console.error("Error creating room:", data.message);
         alert(data.message);
@@ -69,7 +71,7 @@ const LiveCodeDashboard = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             roomId: formData.room_id,
-            clerkId: user.clerkId,
+            clerkId: user._id,
           }),
         }
       );
@@ -158,6 +160,7 @@ const LiveCodeDashboard = () => {
             onSubmit={deleteRoom}
           />
         </header>
+
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
             <FileCards files={sampleFiles} />

@@ -18,7 +18,7 @@ export const createRoom = async (req: Request, res: Response): Promise<any> => {
         .json({ success: false, message: "All fields are required" });
     }
 
-    const user = await User.findOne({ clerkId: createdBy });
+    const user = await User.findOne({ _id: createdBy });
 
     // console.log(user);
     if (!user) {
@@ -53,9 +53,9 @@ export const createRoom = async (req: Request, res: Response): Promise<any> => {
 
 export const joinRoom = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { roomId, clerkId } = req.body;
+    const { roomId, userId } = req.body;
 
-    if (!roomId || !clerkId) {
+    if (!roomId || !userId) {
       return res
         .status(400)
         .json({ success: false, message: "Room ID and User ID are required" });
@@ -68,7 +68,7 @@ export const joinRoom = async (req: Request, res: Response): Promise<any> => {
         .json({ success: false, message: "Room not found" });
     }
 
-    const user = await User.findOne({ clerkId });
+    const user = await User.findOne({ _id: userId });
     if (!user) {
       return res
         .status(404)

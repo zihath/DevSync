@@ -22,8 +22,9 @@ const AuthHandler = () => {
         });
         if (response.ok) {
           const existingUser = await response.json();
-          dispatch(setUser(existingUser)); // let's store existing user in our appStore
+          dispatch(setUser(existingUser.user)); // let's store existing user in our appStore
           console.log("User already exists, skipping creation.");
+          // console.log(existingUser.user);
           return;
         } else {
           console.log("User not found, creating user...");
@@ -57,7 +58,7 @@ const AuthHandler = () => {
 
         const res = await response.json();
         dispatch(setUser(res.user));
-        console.log("User creation response:", res);
+        console.log("User creation response:", res.user);
       } catch (error) {
         console.error("Error creating user:", error);
       }

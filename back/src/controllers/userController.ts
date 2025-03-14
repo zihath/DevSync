@@ -12,7 +12,10 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
     let user: IUser | null = await User.findOne({ clerkId: userId });
 
     if (user) {
-      return res.status(200).json({ message: "User already exists", user });
+      const { clerkId, ...userWithoutClerkId } = user.toObject();
+      return res
+        .status(200)
+        .json({ message: "User already exists", user: userWithoutClerkId });
     }
 
     user = new User({
@@ -24,7 +27,11 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
     });
 
     await user.save();
-    res.status(201).json({ message: "User registered successfully", user });
+    const { clerkId, ...userWithoutClerkId } = user.toObject();
+    res.status(201).json({
+      message: "User registered successfully",
+      user: userWithoutClerkId,
+    });
   } catch (error: any) {
     res
       .status(500)
@@ -39,7 +46,10 @@ export const getUser = async (req: Request, res: Response): Promise<any> => {
     const user = await User.findOne({ clerkId: userId });
 
     if (user) {
-      return res.status(200).json(user);
+      const { clerkId, ...userWithoutClerkId } = user?.toObject() || {};
+      return res
+        .status(200)
+        .json({ message: "User found", user: userWithoutClerkId });
     } else {
       return res.status(404).json({ message: "User not found" });
     }
