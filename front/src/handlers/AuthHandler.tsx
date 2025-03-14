@@ -11,25 +11,32 @@ import { AppDispatch } from "@/store/appStore";
 const AuthHandler = () => {
   const { isLoaded, isSignedIn } = useAuth();
   const { user } = useUser();
-  const clerkId = user?.id;
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const createUser = async () => {
-      if (!user) return;
-
+    const fetchUser = async () => {
       try {
-        // if user already exists we dont update in database
-        const checkResponse = await fetch(
-          `http://localhost:3000/api/users/${clerkId}`
-        );
-        if (checkResponse.ok) {
-          const existingUser = await checkResponse.json();
+        const response = await fetch("http://localhost:3000/api/users", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          const existingUser = await response.json();
           dispatch(setUser(existingUser)); // let's store existing user in our appStore
           console.log("User already exists, skipping creation.");
           return;
+        } else {
+          console.log("User not found, creating user...");
+          await createUser();
         }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
 
+    const createUser = async () => {
+      if (!user) return;
+      try {
         // If user not found, create the user and update in db
         const response = await fetch(
           "http://localhost:3000/api/users/create-user",
@@ -38,8 +45,10 @@ const AuthHandler = () => {
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include",
+            // sending the details from the clerk user object to backend.
+            // we can replace the clerk with custom signup in future.
             body: JSON.stringify({
-              clerkId: user.id,
               username: user.fullName,
               email: user.primaryEmailAddress?.emailAddress,
             }),
@@ -55,9 +64,9 @@ const AuthHandler = () => {
     };
 
     if (user) {
-      createUser();
+      fetchUser();
     }
-  }, [user, dispatch, clerkId]);
+  }, [user, dispatch]);
 
   if (!isLoaded) {
     return <LoaderPage />;

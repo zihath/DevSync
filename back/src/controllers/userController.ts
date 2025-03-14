@@ -1,17 +1,22 @@
 import { Request, Response } from "express";
 import User, { IUser } from "../models/User";
+import { getAuth } from "@clerk/express";
 
 export const createUser = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { clerkId, username, email } = req.body;
-    let user: IUser | null = await User.findOne({ clerkId });
+    // this userId is the clerkId
+    const { userId } = getAuth(req);
+    console.log(userId);
+
+    const { username, email } = req.body;
+    let user: IUser | null = await User.findOne({ clerkId: userId });
 
     if (user) {
       return res.status(200).json({ message: "User already exists", user });
     }
 
     user = new User({
-      clerkId,
+      clerkId: userId,
       username,
       email,
       joinedRooms: [],
@@ -29,8 +34,9 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
 
 export const getUser = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { clerkId } = req.params;
-    const user = await User.findOne({ clerkId });
+    const { userId } = getAuth(req);
+    console.log(userId);
+    const user = await User.findOne({ clerkId: userId });
 
     if (user) {
       return res.status(200).json(user);
