@@ -5,6 +5,7 @@ import connectDB from "./config/db";
 import userRoutes from "./routes/userRoutes";
 import roomRoutes from "./routes/roomRoutes";
 import { clerkMiddleware } from "@clerk/express";
+import authRoutes from "./routes/authroutes";
 dotenv.config();
 connectDB();
 
@@ -27,6 +28,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/rooms", roomRoutes);
-
+app.use("/api/auth", authRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

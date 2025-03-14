@@ -18,7 +18,7 @@ export const createRoom = async (req: Request, res: Response): Promise<any> => {
         .json({ success: false, message: "All fields are required" });
     }
 
-    const user = await User.findOne({ _id: createdBy });
+    const user = await User.findById(createdBy);
 
     // console.log(user);
     if (!user) {
@@ -28,6 +28,13 @@ export const createRoom = async (req: Request, res: Response): Promise<any> => {
     }
 
     const roomId = crypto.randomUUID();
+
+    // await liveblocks.createRoom(roomId, {
+    //   defaultAccesses: ["room:read"],
+    //   usersAccesses: [
+    //     [user._id] : ["room:read", "room:write"]
+    //   ],
+    // });
 
     const newRoom = new Room({
       roomId,
