@@ -20,12 +20,12 @@ const AuthHandler = () => {
           method: "GET",
           credentials: "include",
         });
-        if (response.ok) {
-          const existingUser = await response.json();
-          dispatch(setUser(existingUser.user)); // let's store existing user in our appStore
+        console.log("at auth handler response of fetch user");
+
+        const res = await response.json();
+        if (res.message == "User Found") {
+          dispatch(setUser(res.user)); // Store existing user
           console.log("User already exists, skipping creation.");
-          // console.log(existingUser.user);
-          return;
         } else {
           console.log("User not found, creating user...");
           await createUser();

@@ -42,6 +42,7 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
 export const getUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { userId } = getAuth(req);
+    console.log("At getUser");
     console.log(userId);
     const user = await User.findOne({ clerkId: userId });
 

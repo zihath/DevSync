@@ -23,8 +23,8 @@ import { useRoom } from "@liveblocks/react/suspense";
 import { useSearchParams } from "react-router-dom";
 import LiveCodeHeader from "./LiveCodeHeader";
 import Drawing from "@/Draw/Drawing";
-import ChatBubble from "@/Chat/Chat";
-import Draggable from "react-draggable";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/appStore";
 
 const fixedSizeTheme = EditorView.theme({
   "&": { height: "100%" },
@@ -48,7 +48,7 @@ const LiveCodeEditor: React.FC = () => {
   const [showInput, setShowInput] = useState(false);
 
   const [isDrawingMode, setIsDrawingMode] = useState(false);
-
+  const username = useSelector((state: RootState) => state.user.username); // Get username from Redux store
   const ref = useCallback((node: HTMLElement | null) => {
     if (node) setElement(node);
   }, []);
@@ -72,9 +72,14 @@ const LiveCodeEditor: React.FC = () => {
 
     const newYDoc = new Y.Doc();
     const provider = new LiveblocksYjsProvider(room, newYDoc);
+    // const yProvider = getYjsProviderForRoom(room);
     const ytext = newYDoc.getText("codemirror");
 
     setYDoc(newYDoc);
+    provider.awareness.setLocalStateField("user", {
+      name: username,
+      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    });
 
     const state = EditorState.create({
       doc: "",
@@ -95,7 +100,7 @@ const LiveCodeEditor: React.FC = () => {
       provider.destroy();
       view.destroy();
     };
-  }, [element, room, language]);
+  }, [element, room, language, username]);
 
   useEffect(() => {
     if (!ydoc) return;
@@ -138,38 +143,6 @@ const LiveCodeEditor: React.FC = () => {
 
       {/* Main Resizable Panels */}
       <ResizablePanelGroup direction="horizontal" className="flex-1 relative">
-        {/* <Draggable>
-          <ResizablePanel
-            defaultSize={25}
-            minSize={20}
-            maxSize={30}
-            className="p-2 bg-gray-900 border-r border-gray-700"
-          >
-            <div className="flex flex-col h-full space-y-2 overflow-y-auto">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <React.Fragment key={i}>
-                  <ChatBubble
-                    message="Hello! How are you?"
-                    time="10:30 AM"
-                    isSentByUser={false}
-                    avatar="https://randomuser.me/api/portraits/women/2.jpg"
-                  />
-                  <ChatBubble
-                    message="I'm great! How about you?"
-                    time="10:31 AM"
-                    isSentByUser={true}
-                    avatar="https://randomuser.me/api/portraits/men/1.jpg"
-                  />
-                </React.Fragment>
-              ))}
-            </div>
-          </ResizablePanel>
-        </Draggable>
-
-        <ResizableHandle className="bg-editor-panelBg w-2 transition-all duration-300 hover:bg-editor-accent hover:w-3 flex items-center justify-center">
-          <div className="h-8 w-1 bg-white/20 rounded-full"></div>
-        </ResizableHandle> */}
-
         <ResizablePanel defaultSize={60} className="relative group">
           <div
             ref={ref}

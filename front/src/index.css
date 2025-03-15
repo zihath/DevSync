@@ -166,13 +166,12 @@
   }
 }
 
-
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -186,7 +185,7 @@
     hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 
     focus:ring-opacity-50;
   }
-  
+
   .highlight-hover {
     @apply transition-all duration-300 hover:brightness-110;
   }

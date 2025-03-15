@@ -18,7 +18,7 @@ const LiveCodeDashboard = () => {
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const user = useSelector((state: RootState) => state.user);
-  // console.log(user);
+  console.log(user);
 
   const createRoom = async (formData: { file_name: string }) => {
     // console.log("file name : ", formData.file_name);
@@ -29,19 +29,20 @@ const LiveCodeDashboard = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/rooms/create-room/",
+        "http://localhost:3000/api/rooms/create-room",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             fileName: formData.file_name,
             language: selectedLanguage,
-            createdBy: user,
+            createdBy: user._id,
           }),
         }
       );
-
+      console.log("Showing Response : ");
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
         console.log("Room created successfully:", data);
         navigate(
@@ -70,7 +71,7 @@ const LiveCodeDashboard = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             roomId: formData.room_id,
-            clerkId: user._id,
+            userId: user._id,
           }),
         }
       );
