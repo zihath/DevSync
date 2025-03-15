@@ -4,13 +4,23 @@ import dotenv from "dotenv";
 import connectDB from "./config/db";
 import userRoutes from "./routes/userRoutes";
 import roomRoutes from "./routes/roomRoutes";
-
+import { clerkMiddleware } from "@clerk/express";
+import authRoutes from "./routes/authroutes";
 dotenv.config();
 connectDB();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+// when we are sending request from frontend to backend we need to allow cors
+// we should mention the origin port and credentials as true because we are using cookies.
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+// app.use(cors());
+app.use(clerkMiddleware());
 
 app.get("/", (req, res) => {
   res.send("Server is running!");
@@ -18,6 +28,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/rooms", roomRoutes);
-
+// app.use("/api/auth", authRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

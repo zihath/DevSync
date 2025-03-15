@@ -16,7 +16,7 @@ const LiveCodeWrapper = () => {
   return (
     <div className="flex flex-col h-screen bg-editor-background mb-0">
       {isValid ? (
-        <RoomProvider id={roomId!}>
+        <RoomProvider id={roomId!} initialPresence={{ cursor: null }}>
           <ClientSideSuspense fallback={<LoaderPage />}>
             <LiveCodeEditor />
           </ClientSideSuspense>

@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/sidebar";
 
 import FileCards from "@/components/RoomCard";
-
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/appStore";
 
@@ -19,7 +18,7 @@ const LiveCodeDashboard = () => {
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const user = useSelector((state: RootState) => state.user);
-  // console.log(user);
+  console.log(user);
 
   const createRoom = async (formData: { file_name: string }) => {
     // console.log("file name : ", formData.file_name);
@@ -30,22 +29,25 @@ const LiveCodeDashboard = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/rooms/create-room/",
+        "http://localhost:3000/api/rooms/create-room",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             fileName: formData.file_name,
             language: selectedLanguage,
-            createdBy: user.clerkId,
+            createdBy: user._id,
           }),
         }
       );
-
+      console.log("Showing Response : ");
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
         console.log("Room created successfully:", data);
-        navigate(`/live-code/${data.room.roomId}?lang=${selectedLanguage}&filename=${formData.file_name}`);
+        navigate(
+          `/live-code/${data.room.roomId}?lang=${selectedLanguage}&filename=${formData.file_name}`
+        );
       } else {
         console.error("Error creating room:", data.message);
         alert(data.message);
@@ -69,7 +71,7 @@ const LiveCodeDashboard = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             roomId: formData.room_id,
-            clerkId: user.clerkId,
+            userId: user._id,
           }),
         }
       );
@@ -158,6 +160,7 @@ const LiveCodeDashboard = () => {
             onSubmit={deleteRoom}
           />
         </header>
+
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
             <FileCards files={sampleFiles} />

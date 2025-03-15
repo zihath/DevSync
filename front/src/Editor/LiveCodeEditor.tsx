@@ -23,6 +23,8 @@ import { useRoom } from "@liveblocks/react/suspense";
 import { useSearchParams } from "react-router-dom";
 import LiveCodeHeader from "./LiveCodeHeader";
 import Drawing from "@/Draw/Drawing";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/appStore";
 
 const fixedSizeTheme = EditorView.theme({
   "&": { height: "100%" },
@@ -46,7 +48,7 @@ const LiveCodeEditor: React.FC = () => {
   const [showInput, setShowInput] = useState(false);
 
   const [isDrawingMode, setIsDrawingMode] = useState(false);
-
+  const username = useSelector((state: RootState) => state.user.username); // Get username from Redux store
   const ref = useCallback((node: HTMLElement | null) => {
     if (node) setElement(node);
   }, []);
@@ -70,9 +72,14 @@ const LiveCodeEditor: React.FC = () => {
 
     const newYDoc = new Y.Doc();
     const provider = new LiveblocksYjsProvider(room, newYDoc);
+    // const yProvider = getYjsProviderForRoom(room);
     const ytext = newYDoc.getText("codemirror");
 
     setYDoc(newYDoc);
+    provider.awareness.setLocalStateField("user", {
+      name: username,
+      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    });
 
     const state = EditorState.create({
       doc: "",
@@ -93,7 +100,7 @@ const LiveCodeEditor: React.FC = () => {
       provider.destroy();
       view.destroy();
     };
-  }, [element, room, language]);
+  }, [element, room, language, username]);
 
   useEffect(() => {
     if (!ydoc) return;
@@ -139,7 +146,7 @@ const LiveCodeEditor: React.FC = () => {
         <ResizablePanel defaultSize={60} className="relative group">
           <div
             ref={ref}
-            className="w-full h-full overflow-auto  border border-white/10 group-hover:border-editor-accent/70 transition-colors duration-200"
+            className="w-full h-full overflow-auto border border-white/10 group-hover:border-editor-accent/70 transition-colors duration-200"
           ></div>
         </ResizablePanel>
 
