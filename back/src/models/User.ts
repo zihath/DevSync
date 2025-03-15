@@ -7,6 +7,7 @@ export interface IUser extends Document {
   email: string;
   joinedRooms: mongoose.Types.ObjectId[];
   createdRooms: mongoose.Types.ObjectId[];
+  projectsCreated : mongoose.Types.ObjectId[];
 }
 
 const UserSchema: Schema = new Schema({
@@ -15,6 +16,7 @@ const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   joinedRooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
   createdRooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
+  projectsCreated: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }]
 });
 
 export default mongoose.model<IUser>("User", UserSchema);
