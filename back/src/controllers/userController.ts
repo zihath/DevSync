@@ -45,14 +45,14 @@ export const getUser = async (req: Request, res: Response): Promise<any> => {
     console.log("At getUser");
     console.log(userId);
     const user = await User.findOne({ clerkId: userId });
-
+    console.log("user", user);
     if (user) {
       const { clerkId, ...userWithoutClerkId } = user?.toObject() || {};
       return res
         .status(200)
         .json({ message: "User found", user: userWithoutClerkId });
     } else {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(200).json({ message: "User not found" });
     }
   } catch (error: any) {
     res

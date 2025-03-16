@@ -41,7 +41,7 @@ export const createRoom = async (req: Request, res: Response): Promise<any> => {
     });
 
     await newRoom.save();
-    user.createdRooms.push(newRoom._id);
+    user.createdRooms.push(newRoom.roomId);
     await user.save();
 
     res.status(201).json({
@@ -96,15 +96,10 @@ export const joinRoom = async (req: Request, res: Response): Promise<any> => {
       room.participants.push(user._id);
 
       // Add to user's joinedRooms if not already there
-      if (!user.joinedRooms.some((id) => id.equals(room._id))) {
-        user.joinedRooms.push(room._id);
+      if (!user.joinedRooms.includes(room.roomId)) {
+        user.joinedRooms.push(room.roomId);
       }
-    } else {
-      room.participants = room.participants.map((p) =>
-        p.equals(user._id) ? user._id : p
-      );
     }
-
     await room.save();
     await user.save();
 
@@ -121,7 +116,8 @@ export const joinRoom = async (req: Request, res: Response): Promise<any> => {
 
 export const deleteRoom = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { userId, roomId } = req.body;
+    const { roomId } = req.params;
+    const userId = req.body.userId;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -152,16 +148,16 @@ export const deleteRoom = async (req: Request, res: Response): Promise<any> => {
 
     // Update all users who have joined this room
     await User.updateMany(
-      { joinedRooms: room._id }, // Find users who have this room in their joinedRooms array
-      { $pull: { joinedRooms: room._id } } // Remove the room._id from their joinedRooms array
+      { joinedRooms: room.roomId }, // Find users who have this room in their joinedRooms array
+      { $pull: { joinedRooms: room.roomId } } // Remove the room.roomId from their joinedRooms array
     );
 
     // Update the creator's createdRooms
-    user.createdRooms = user.createdRooms.filter((id) => !id.equals(room._id));
+    user.createdRooms = user.createdRooms.filter((id) => id !== room.roomId);
     await user.save();
 
     // Delete the room from the database
-    await Room.findByIdAndDelete(room._id);
+    await Room.findOneAndDelete({ roomId: room.roomId });
 
     res.status(200).json({
       success: true,
@@ -170,5 +166,56 @@ export const deleteRoom = async (req: Request, res: Response): Promise<any> => {
   } catch (error) {
     console.error("Error deleting room:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+export const getCreatedRooms = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { userId } = req.params;
+
+    // Validate user existence
+    const userExists = await User.findById(userId);
+    if (!userExists) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch all created rooms including participants array
+    const createdRooms = await Room.find({ createdBy: userId })
+      .select("roomId fileName language createdBy createdAt updatedAt")
+      .lean();
+
+    res.status(200).json({ createdRooms });
+  } catch (error) {
+    console.error("Error fetching created rooms:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getJoinedRooms = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { userId } = req.params;
+    console.log("At genJoinedRooms ,userId", userId);
+    // Fetch the user's joinedRooms
+    const user = await User.findById(userId).select("joinedRooms").lean();
+    console.log("user", user);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch room details for the joined room IDs
+    const joinedRooms = await Room.find({ roomId: { $in: user.joinedRooms } })
+      .select("roomId fileName language createdBy createdAt updatedAt")
+      .lean();
+    console.log("joinedRooms", joinedRooms);
+    return res.status(200).json({ joinedRooms });
+  } catch (error) {
+    console.error("Error fetching joined rooms:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

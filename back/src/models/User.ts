@@ -5,16 +5,16 @@ export interface IUser extends Document {
   clerkId: string; // Clerk user ID
   username: string;
   email: string;
-  joinedRooms: mongoose.Types.ObjectId[]; // Rooms the user has joined
-  createdRooms: mongoose.Types.ObjectId[]; // Rooms the user has created
+  joinedRooms: string[]; // Rooms the user has joined
+  createdRooms: string[]; // Rooms the user has created
 }
 
 const UserSchema: Schema = new Schema({
   clerkId: { type: String, required: true, unique: true },
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  joinedRooms: [{ type: Schema.Types.ObjectId, ref: "Room" }],
-  createdRooms: [{ type: Schema.Types.ObjectId, ref: "Room" }],
+  joinedRooms: [{ type: String }],
+  createdRooms: [{ type: String }],
 });
 
 export default mongoose.model<IUser>("User", UserSchema);
