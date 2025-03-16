@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IProject extends Document {
   _id: mongoose.Types.ObjectId;
-  clerkId: mongoose.Types.ObjectId;
+  createdBy: mongoose.Types.ObjectId;
   projectName: string;
   html: string;
   css: string;
@@ -13,7 +13,11 @@ export interface IProject extends Document {
 
 const ProjectSchema: Schema = new Schema(
   {
-    clerkId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    createdBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
     projectName: { type: String, required: true },
     html: { type: String, default: "" },
     css: { type: String, default: "" },
