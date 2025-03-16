@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppSidebar } from "@/components/app-sidebar";
 import Modal from "@/components/Modal";
@@ -11,14 +11,22 @@ import {
 } from "@/components/ui/sidebar";
 
 import FileCards from "@/components/RoomCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/appStore";
+import {
+  addCreatedRoom,
+  addJoinedRoom,
+  removeCreatedRoom,
+} from "@/store/userSlice";
+import { Button } from "@/components/ui/button";
 
 const LiveCodeDashboard = () => {
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const user = useSelector((state: RootState) => state.user);
-  console.log(user);
+  const [activeTab, setActiveTab] = useState("created");
+  const [rooms, setRooms] = useState<any[]>([]);
+  const dispatch = useDispatch();
 
   const createRoom = async (formData: { file_name: string }) => {
     // console.log("file name : ", formData.file_name);
@@ -40,11 +48,12 @@ const LiveCodeDashboard = () => {
           }),
         }
       );
-      console.log("Showing Response : ");
+      // console.log("Showing Response : ");
       const data = await response.json();
       console.log(data);
       if (response.ok) {
         console.log("Room created successfully:", data);
+        dispatch(addCreatedRoom(data.room.roomId));
         navigate(
           `/live-code/${data.room.roomId}?lang=${selectedLanguage}&filename=${formData.file_name}`
         );
@@ -78,6 +87,7 @@ const LiveCodeDashboard = () => {
 
       const data = await response.json();
       if (response.ok) {
+        dispatch(addJoinedRoom(data.room.roomId));
         navigate(`/live-code/${data.room.roomId}`);
       } else {
         alert(data.message);
@@ -88,27 +98,77 @@ const LiveCodeDashboard = () => {
     }
   };
 
-  const deleteRoom = (formData: { delete_room_id: string }) => {
-    // console.log("Deleting room:", formData.delete_room_id);
-    // we need to figure the delete room logic bruh
+  const deleteRoom = async (formData: { delete_room_id: string }) => {
+    if (!formData.delete_room_id) {
+      alert("Room ID is required!");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/rooms/delete-room/${formData.delete_room_id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user._id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        dispatch(removeCreatedRoom(formData.delete_room_id));
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to delete room.");
+    }
   };
-  const sampleFiles = [
-    {
-      filename: "index.html",
-      fileType: "html",
-      createdAt: "2025-02-15T14:32:00",
-    },
-    {
-      filename: "styles.css",
-      fileType: "css",
-      createdAt: "2025-02-20T09:15:00",
-    },
-    {
-      filename: "app.js",
-      fileType: "javascript",
-      createdAt: "2025-03-01T16:45:00",
-    },
-  ];
+
+  const fetchCreatedRooms = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/rooms/created-rooms/${user._id}`
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setRooms(data.createdRooms);
+      } else {
+        console.error("Error fetching created rooms:", data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchJoinedRooms = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/rooms/joined-rooms/${user._id}`
+      );
+      const data = await response.json();
+      console.log("data", data);
+      if (response.ok) {
+        setRooms(data.joinedRooms);
+      } else {
+        console.error("Error fetching joined rooms:", data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "created") {
+      fetchCreatedRooms();
+    } else {
+      console.log("fetching joined rooms");
+      fetchJoinedRooms();
+    }
+  }, [activeTab]);
 
   return (
     <SidebarProvider>
@@ -159,11 +219,20 @@ const LiveCodeDashboard = () => {
             ]}
             onSubmit={deleteRoom}
           />
+
+          <Button onClick={() => setActiveTab("joined")}>Recent Rooms</Button>
+          <Button onClick={() => setActiveTab("created")}>My Rooms </Button>
         </header>
 
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            <FileCards files={sampleFiles} />
+            <FileCards
+              files={rooms.map((room) => ({
+                filename: room.fileName,
+                fileType: room.language,
+                createdAt: room.createdAt,
+              }))}
+            />
           </div>
         </div>
       </SidebarInset>
