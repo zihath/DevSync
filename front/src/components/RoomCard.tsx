@@ -2,13 +2,14 @@ import {
   Calendar,
   FileText,
   Trash2,
-  Share2,
   Users,
   ArrowRightCircle,
   Clock,
   User,
 } from "lucide-react";
 
+import ConfirmDialog from "./ConfirmDialog";
+import ShareDialog from "./ShareDialog";
 type Room = {
   roomId: string;
   fileName: string;
@@ -18,13 +19,13 @@ type Room = {
   updatedAt: string;
 };
 
-type FileCardsProps = {
+type RoomCardsProps = {
   rooms: Room[];
   joinRoom: (formData: { room_id: string }) => Promise<void>;
   deleteRoom: (formData: { delete_room_id: string }) => Promise<void>;
 };
 
-type FileCardProps = {
+type RoomCardProps = {
   room: Room;
   joinRoom: (formData: { room_id: string }) => Promise<void>;
   deleteRoom: (formData: { delete_room_id: string }) => Promise<void>;
@@ -41,12 +42,13 @@ const formatDate = (dateString: string): string => {
   });
 };
 
-const FileCard: React.FC<FileCardProps> = ({ room, joinRoom, deleteRoom }) => {
+const RoomCard: React.FC<RoomCardProps> = ({ room, joinRoom, deleteRoom }) => {
   const handleJoinRoom = async () => {
     await joinRoom({ room_id: room.roomId });
   };
 
   const handleDeleteRoom = async () => {
+    console.log("delete room", room.roomId);
     await deleteRoom({ delete_room_id: room.roomId });
   };
 
@@ -85,35 +87,50 @@ const FileCard: React.FC<FileCardProps> = ({ room, joinRoom, deleteRoom }) => {
           {room.language.toUpperCase()}
         </span>
         <div className="flex space-x-2">
-          <button
-            className="p-2 rounded-md bg-gray-800 hover:bg-gray-700 transition"
-            onClick={handleJoinRoom}
-          >
-            <ArrowRightCircle
-              size={18}
-              className="text-gray-300 hover:text-gray-100"
-            />
-          </button>
+          <ConfirmDialog
+            trigger={
+              <button className="p-2 rounded-md bg-gray-800 hover:bg-gray-700 transition">
+                <ArrowRightCircle
+                  size={18}
+                  className="text-gray-300 hover:text-gray-100"
+                />
+              </button>
+            }
+            title="Join Room"
+            description="Are you sure you want to join this room?"
+            onConfirm={handleJoinRoom}
+          />
+
           <button className="p-2 rounded-md bg-gray-800 hover:bg-gray-700 transition">
             <Users size={18} className="text-gray-300 hover:text-gray-100" />
           </button>
-          <button className="p-2 rounded-md bg-gray-800 hover:bg-gray-700 transition">
-            <Share2 size={18} className="text-gray-300 hover:text-gray-100" />
-          </button>
 
-          <button
-            className="p-2 rounded-md bg-red-800 hover:bg-red-700 transition"
-            onClick={handleDeleteRoom}
-          >
-            <Trash2 size={18} className="text-gray-300 hover:text-gray-100" />
-          </button>
+          <ShareDialog
+            roomId={room.roomId}
+            language={room.language}
+            fileName={room.fileName}
+          />
+
+          <ConfirmDialog
+            trigger={
+              <button className="p-2 rounded-md bg-red-800 hover:bg-red-600 transition">
+                <Trash2
+                  size={18}
+                  className="text-gray-300 hover:text-gray-100"
+                />
+              </button>
+            }
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete the room."
+            onConfirm={handleDeleteRoom}
+          />
         </div>
       </div>
     </div>
   );
 };
 
-const FileCards: React.FC<FileCardsProps> = ({
+const RoomCards: React.FC<RoomCardsProps> = ({
   rooms,
   joinRoom,
   deleteRoom,
@@ -132,7 +149,7 @@ const FileCards: React.FC<FileCardsProps> = ({
       <h2 className="text-3xl font-bold mb-6 text-gray-100">My Files</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {rooms.map((room, index) => (
-          <FileCard
+          <RoomCard
             key={room?.roomId || index}
             room={room}
             joinRoom={joinRoom}
@@ -144,4 +161,4 @@ const FileCards: React.FC<FileCardsProps> = ({
   );
 };
 
-export default FileCards;
+export default RoomCards;

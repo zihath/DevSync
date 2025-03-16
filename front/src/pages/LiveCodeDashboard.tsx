@@ -10,7 +10,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import FileCards from "@/components/RoomCard";
+import RoomCards from "@/components/RoomCard";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/appStore";
 import {
@@ -124,6 +124,10 @@ const LiveCodeDashboard = () => {
       const data = await response.json();
       if (response.ok) {
         dispatch(removeCreatedRoom(formData.delete_room_id));
+
+        setRooms((prevRooms) =>
+          prevRooms.filter((room) => room.roomId !== formData.delete_room_id)
+        );
       } else {
         alert(data.message);
       }
@@ -174,7 +178,8 @@ const LiveCodeDashboard = () => {
       fetchJoinedRooms();
     }
   }, [activeTab, user._id]);
-  console.log("rooms", rooms);
+
+  // console.log("rooms", rooms);
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -231,7 +236,7 @@ const LiveCodeDashboard = () => {
 
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            <FileCards
+            <RoomCards
               rooms={rooms}
               joinRoom={joinRoom}
               deleteRoom={deleteRoom}
