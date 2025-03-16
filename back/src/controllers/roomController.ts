@@ -184,7 +184,7 @@ export const getCreatedRooms = async (
 
     // Fetch all created rooms including participants array
     const createdRooms = await Room.find({ createdBy: userId })
-      .select("roomId fileName language createdAt updatedAt")
+      .select("roomId fileName language createdBy createdAt updatedAt")
       .lean();
 
     res.status(200).json({ createdRooms });
