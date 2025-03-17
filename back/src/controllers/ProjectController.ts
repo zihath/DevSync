@@ -8,18 +8,22 @@ export const createProject = async (req: Request, res: Response): Promise<any> =
     const { projectName, createdBy } = req.body;
 
     if (!projectName || !createdBy) {
+      console.log({ message: "Project name and createdBy are required" });
       return res
         .status(400)
         .json({ message: "Project name and createdBy are required" });
+        
     }
 
     // Find user by their id (assuming createdBy is the user's _id)
     const user = await User.findById(createdBy);
     if (!user) {
+      console.log({ message: "User not found in user collection" });
       return res
         .status(404)
         .json({ success: false, message: "User not found in user collection" });
     }
+    console.log("from backend" , user);
 
     // Create project with the correct field name: createdBy
     const newProject = new Project({
@@ -27,13 +31,21 @@ export const createProject = async (req: Request, res: Response): Promise<any> =
       createdBy: user._id,
     });
 
+    console.log("s1");
     await newProject.save();
 
+    console.log("s2");
     // Update the user's projectsCreated array if that field exists on the user schema
-    if (user.projectsCreated) {
-      user.projectsCreated.push(newProject._id);
-      await user.save();
-    }
+    // if (user.projectsCreated) {
+    //   user.projectsCreated.push(newProject._id);
+    //   await user.save();
+    // }
+
+    user.projectsCreated.push(newProject._id);
+    console.log("s3");
+    await user.save();
+    console.log("s4");
+    
 
     res.status(201).json({
       success: true,
