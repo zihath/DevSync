@@ -107,7 +107,7 @@ const ProjectDashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project) => (
-          <Link>
+          <Link to={`/project-editor/${project._id}`} key={project._id}>
             <div key={project._id} className="bg-gray-800 rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-semibold mb-2 text-white">{project.projectName}</h2>
               <p className="text-gray-400">

@@ -8,7 +8,8 @@ import SingUpPage from "./routes/SingUpPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import LiveCodeDashboard from "./pages/LiveCodeDashboard";
 import LiveCodeWrapper from "./Editor/LiveCodeWrapper";
-import ProjectDashboard from "./pages/ProjectDashboard"
+import ProjectDashboard from "./pages/ProjectDashboard";
+import ProjectEditor from "./PenCodeEditor/ProjectEditor";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/live-code" element={<LiveCodeDashboard />} />
             <Route path="/live-code/:roomId" element={<LiveCodeWrapper />} />
             <Route path = "/project-dasboard" element={<ProjectDashboard/>}></Route>
+            <Route path = "/project-editor/:projectId" element={<ProjectEditor/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
