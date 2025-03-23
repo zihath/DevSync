@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import Preview from "@/PenCodeEditor/Preview";
+
 
 const ProjectDashboard = () => {
   const [projects, setProjects] = useState([]);
@@ -105,14 +106,34 @@ const ProjectDashboard = () => {
         </form>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project) => (
-          <Link to={`/project-editor/${project._id}`} key={project._id}>
-            <div key={project._id} className="bg-gray-800 rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-2 text-white">{project.projectName}</h2>
+          <Link
+            to={`/project-editor/${project._id}`}
+            key={project._id}
+            className="bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+          >
+            {/* Card Content */}
+            <div className="flex flex-col h-full">
+              {/* The live preview area */}
+              <div className="flex-1">
+                <Preview
+                  html={project.html || ""}
+                  css={project.css || ""}
+                  js={project.js || ""}
+                  heightClass="h-40"
+                />
+              </div>
+
+              {/* Project info area */}
+              <div className="p-1">
+              <h2 className="text-xl font-semibold mb-1 text-white">
+                {project.projectName}
+              </h2>
               <p className="text-gray-400">
-                Created By: {project.createdBy?.username || "Unknown"}
+                {project.createdBy?.username || "Unknown"}
               </p>
+            </div>
             </div>
           </Link>
         ))}
