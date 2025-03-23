@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const useSaveProjectOnExit = (projectId: string, html: string, css: string, js: string): void => {
-  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const saveProject = async (): Promise<void> => {
@@ -19,30 +19,11 @@ const useSaveProjectOnExit = (projectId: string, html: string, css: string, js: 
       }
     };
 
-    const handleVisibilityChange = (): void => {
-      if (document.visibilityState === "hidden") {
-        saveProject();
-      }
-    };
-
-    const handleBeforeUnload = (): void => {
-      saveProject();
-    };
-
-    const handlePopState = (): void => {
-      saveProject();
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("popstate", handlePopState);
-
+    // Call saveProject when the component unmounts or before the location changes.
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("popstate", handlePopState);
+      saveProject();
     };
-  }, [projectId, html, css, js]);
+  }, [location.pathname, projectId, html, css, js]);
 };
 
 export default useSaveProjectOnExit;

@@ -50,7 +50,7 @@ export default function ResizableEditors() {
               <Link to="/" className="hover:text-gray-400">Home</Link>
             </li>
             <li>
-              <Link to="/projects" className="hover:text-gray-400">Projects</Link>
+              <Link to="/project-dasboard" className="hover:text-gray-400">Projects</Link>
             </li>
             <li>
               <Link to="/about" className="hover:text-gray-400">About</Link>
