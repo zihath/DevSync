@@ -3,7 +3,7 @@ import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/componen
 import { Link, useParams, useNavigate } from "react-router-dom";
 import CodeEditor from "./CodeEditor";
 import Preview from "./Preview";
-import { Home, Save, Settings, Play, Eye, Download, Share2, Loader2 } from "lucide-react";
+import { Home,ArrowLeft, Save, Settings, Play, Eye, Download, Share2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import useSaveProjectOnExit from "./useSaveProjectOnExit";
 
@@ -151,6 +151,13 @@ const ProjectEditor = () => {
       {/* Header Section */}
       <header className="bg-card border-b border-border h-14 flex items-center justify-between px-4 shadow-sm z-10">
         <div className="flex items-center space-x-4">
+          <Link 
+            to="/project-dashboard" 
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            title="Back"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
           <Link 
             to="/" 
             className="text-muted-foreground hover:text-foreground transition-colors"

@@ -21,6 +21,6 @@ export const HeaderRoutes = [
   },
   {
     label : "Project DashBoard",
-    href : "/project-dasboard",
+    href : "/project-dashboard",
   }
 ];
