@@ -53,7 +53,15 @@ module.exports = {
           warning: "#ff9800",
           error: "#e53935",
           panelBg: "#252526",
-          inputBg: "#2d2d2d"
+          inputBg: "#2d2d2d",
+          bg: "#1e1e1e",
+          header: "#252526",
+          border: "#333333",
+        },
+        syntax: {
+          html: "#e34c26",
+          css: "#264de4",
+          js: "#f0db4f",
         },
         chart: {
           "1": "hsl(var(--chart-1))",
@@ -71,6 +79,10 @@ module.exports = {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
       },
       borderRadius: {
