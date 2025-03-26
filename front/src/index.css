@@ -193,4 +193,61 @@
   .panel-transition {
     @apply transition-all duration-300 ease-in-out;
   }
+  .glass-effect {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-lg;
+  }
+  
+  .editor-transition {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .hover-glow {
+    @apply transition-shadow duration-300 ease-out;
+  }
+
+  .hover-glow:hover {
+    @apply shadow-[0_0_15px_rgba(59,130,246,0.5)];
+  }
+
+  .preview-loading {
+    @apply animate-pulse-subtle;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-300 ease-out;
+  }
+  
+  .hover-lift:hover {
+    @apply -translate-y-1;
+  }
+  
+  .code-panel {
+    @apply bg-editor-bg border border-editor-border rounded-lg overflow-hidden shadow-md;
+  }
+  
+  .code-header {
+    @apply bg-editor-header text-gray-300 py-2 px-3 font-mono text-sm border-b border-editor-border flex items-center;
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-600 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
+  }
 }

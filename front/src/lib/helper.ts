@@ -19,4 +19,8 @@ export const HeaderRoutes = [
     label: "Live Code",
     href: "/live-code",
   },
+  {
+    label : "Project DashBoard",
+    href : "/project-dashboard",
+  }
 ];

@@ -9,6 +9,8 @@ import SingUpPage from "./routes/SingUpPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import LiveCodeDashboard from "./pages/LiveCodeDashboard";
 import LiveCodeWrapper from "./Editor/LiveCodeWrapper";
+import ProjectDashboard from "./pages/ProjectDashboard";
+import ProjectEditor from "./PenCodeEditor/ProjectEditor";
 import { useDispatch } from "react-redux";
 import { setUser } from "./store/userSlice";
 import { AppDispatch } from "./store/appStore";
@@ -86,6 +88,8 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/live-code" element={<LiveCodeDashboard />} />
             <Route path="/live-code/:roomId" element={<LiveCodeWrapper />} />
+            <Route path = "/project-dashboard" element={<ProjectDashboard/>}></Route>
+            <Route path = "/project-editor/:projectId" element={<ProjectEditor/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

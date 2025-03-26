@@ -14,7 +14,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const { user } = useUser();
-  console.log(user);
+  // console.log(user);
   // return <UserButton />;
   useEffect(() => {
     const handleScroll = () => {
