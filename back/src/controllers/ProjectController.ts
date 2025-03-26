@@ -23,7 +23,7 @@ export const createProject = async (req: Request, res: Response): Promise<any> =
         .status(404)
         .json({ success: false, message: "User not found in user collection" });
     }
-    console.log("from backend" , user);
+    // console.log("from backend" , user);
 
     // Create project with the correct field name: createdBy
     const newProject = new Project({
@@ -34,10 +34,10 @@ export const createProject = async (req: Request, res: Response): Promise<any> =
       js,
     });
 
-    console.log("s1");
+    // console.log("s1");
     await newProject.save();
 
-    console.log("s2");
+    // console.log("s2");
     // Update the user's projectsCreated array if that field exists on the user schema
     // if (user.projectsCreated) {
     //   user.projectsCreated.push(newProject._id);
@@ -45,9 +45,9 @@ export const createProject = async (req: Request, res: Response): Promise<any> =
     // }
 
     user.projectsCreated.push(newProject._id);
-    console.log("s3");
+    // console.log("s3");
     await user.save();
-    console.log("s4");
+    // console.log("s4");
     
 
     res.status(201).json({
