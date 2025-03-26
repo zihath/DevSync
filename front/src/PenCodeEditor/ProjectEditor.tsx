@@ -3,9 +3,9 @@ import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/componen
 import { Link, useParams, useNavigate } from "react-router-dom";
 import CodeEditor from "./CodeEditor";
 import Preview from "./Preview";
-import { Home,ArrowLeft, Save, Settings, Play, Eye, Download, Share2, Loader2 } from "lucide-react";
+import { Home, ArrowLeft, Save, Settings, Play, Eye, Download, Share2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import useSaveProjectOnExit from "./useSaveProjectOnExit";
+import { useSelector } from "react-redux";
 
 const ProjectEditor = () => {
   const { projectId } = useParams();
@@ -19,8 +19,27 @@ const ProjectEditor = () => {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const [isEdited, setIsEdited] = useState(false);
 
-  // Auto-save timer
+  // New state for saving project name
+  const [isSavingName, setIsSavingName] = useState(false);
+  const [isNameEdited, setIsNameEdited] = useState(false);
+  const [autoSaveNameTimer, setAutoSaveNameTimer] = useState(null);
+
+  // Auto-save timer for code content
   const [autoSaveTimer, setAutoSaveTimer] = useState(null);
+
+  // Hypothetical current user; in your real app this should come from your auth context or props.
+  const currentUserId = useSelector((state) => state.user._id);
+
+  // Determine if the current user is the owner of the project
+  // console.log(currentUserId);
+  // if(project){
+  //   console.log(project.createdBy._id.toString());
+  // }
+  
+  const isOwner = project?.createdBy?._id?.toString() === currentUserId;
+
+
+  // console.log(isOwner);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -43,25 +62,21 @@ const ProjectEditor = () => {
     fetchProject();
   }, [projectId]);
   
-  // Set up auto-save
+  // Auto-save for code content
   useEffect(() => {
-    if (isEdited && autoUpdate) {
-      // Clear any existing timer
+    if (isEdited && autoUpdate && isOwner) {
       if (autoSaveTimer) clearTimeout(autoSaveTimer);
-      
-      // Set a new timer
       const timer = setTimeout(() => {
         handleSave();
-      }, 3000); // Auto-save after 3 seconds of inactivity
+      }, 3000);
       
       setAutoSaveTimer(timer);
     }
     
-    // Clean up on unmount
     return () => {
       if (autoSaveTimer) clearTimeout(autoSaveTimer);
     };
-  }, [html, css, js, isEdited, autoUpdate]);
+  }, [html, css, js, isEdited, autoUpdate, isOwner]);
 
   // Mark as edited when code changes
   useEffect(() => {
@@ -72,11 +87,35 @@ const ProjectEditor = () => {
     }
   }, [html, css, js, project]);
 
+  // Mark project name as edited if it changes
+  useEffect(() => {
+    if (project && projectName !== project.projectName) {
+      setIsNameEdited(true);
+    }
+  }, [projectName, project]);
+
+  // Auto-save for project name changes
+  useEffect(() => {
+    if (isNameEdited && isOwner) {
+      if (autoSaveNameTimer) clearTimeout(autoSaveNameTimer);
+      const timer = setTimeout(() => {
+        handleSaveProjectName();
+      }, 3000);
+      setAutoSaveNameTimer(timer);
+    }
+    return () => {
+      if (autoSaveNameTimer) clearTimeout(autoSaveNameTimer);
+    };
+  }, [projectName, isNameEdited, isOwner]);
+
   const handleSave = async () => {
+    if (!isOwner) {
+      toast.error("Only the project owner can save changes");
+      return;
+    }
     setIsSaving(true);
     
     try {
-      // Make the API call to save project content
       const response = await fetch(`http://localhost:3000/api/projects/edit-content/${projectId}`, {
         method: "PUT",
         headers: {
@@ -89,7 +128,6 @@ const ProjectEditor = () => {
         throw new Error("Error saving project");
       }
       
-      // Optionally update the local project state with the new content
       if (project) {
         setProject({
           ...project,
@@ -108,10 +146,37 @@ const ProjectEditor = () => {
       setIsSaving(false);
     }
   };
-  
 
+  const handleSaveProjectName = async () => {
+    if (!isOwner) {
+      toast.error("Only the project owner can save changes");
+      return;
+    }
+    setIsSavingName(true);
+    try {
+      const response = await fetch(`http://localhost:3000/api/projects/edit-name/${projectId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ projectName })
+      });
+      if (!response.ok) {
+        throw new Error("Error saving project name");
+      }
+      const data = await response.json();
+      setProject(data);
+      setIsNameEdited(false);
+      toast.success("Project name saved successfully");
+    } catch (error) {
+      console.error("Error saving project name:", error);
+      toast.error("Failed to save project name");
+    } finally {
+      setIsSavingName(false);
+    }
+  };
+  
   const handleDownload = () => {
-    // Create HTML file content
     const fullHtml = `
       <!DOCTYPE html>
       <html lang="en">
@@ -126,9 +191,8 @@ const ProjectEditor = () => {
         <script>${js}</script>
       </body>
       </html>
-          `.trim();
+    `.trim();
     
-    // Create download link
     const blob = new Blob([fullHtml], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -137,7 +201,6 @@ const ProjectEditor = () => {
     document.body.appendChild(a);
     a.click();
     
-    // Clean up
     setTimeout(() => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
@@ -168,12 +231,19 @@ const ProjectEditor = () => {
           
           <div className="h-6 border-r border-border"></div>
           
-          <h1 className="text-lg font-medium truncate max-w-[200px] sm:max-w-sm">
-            {projectName}
-            {isEdited && !isSaving && (
-              <span className="ml-2 text-xs text-muted-foreground">(unsaved)</span>
-            )}
-          </h1>
+          {/* Editable Project Name */}
+          <input
+            type="text"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+            className="text-lg font-medium truncate max-w-[200px] sm:max-w-sm bg-transparent border-none focus:outline-none"
+          />
+          {isNameEdited && !isSavingName && (
+            <span className="ml-2 text-xs text-muted-foreground">(unsaved)</span>
+          )}
+          {isSavingName && (
+            <span className="ml-2 text-xs text-muted-foreground">Saving...</span>
+          )}
         </div>
         
         <div className="flex items-center space-x-4">
@@ -193,7 +263,7 @@ const ProjectEditor = () => {
             
             <button 
               onClick={handleSave}
-              disabled={isSaving || !isEdited}
+              disabled={!isOwner || isSaving || !isEdited}
               className="px-3 py-1 bg-primary hover:bg-primary/90 text-primary-foreground rounded text-xs font-medium transition-colors flex items-center gap-1 disabled:opacity-50"
             >
               {isSaving ? (
@@ -273,7 +343,3 @@ const ProjectEditor = () => {
 };
 
 export default ProjectEditor;
-
-
-
-

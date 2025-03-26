@@ -141,14 +141,14 @@ export const getProjectsByUser = async (req: Request, res: Response): Promise<an
 export const getProjectById = async (req: Request, res: Response): Promise<any> => {
   try {
     const { projectId } = req.params; // Extract _id from URL params
-    console.log(projectId);
+    // console.log(projectId);
     const project = await Project.findById(projectId).populate("createdBy", "username email");
-    console.log("r1");
+    // console.log("r1");
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
-    console.log("r2");
+    // console.log("r2");
     res.status(200).json(project);
   } catch (error) {
     console.log(error);
