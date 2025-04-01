@@ -19,6 +19,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://devsync-frontend-c92n.onrender.com",
   "https://dev-sync-psi.vercel.app",
+  "https://dev-sync-3aoiiv655-zihaths-projects.vercel.app",
 ];
 
 app.use(
