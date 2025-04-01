@@ -32,7 +32,7 @@ createRoot(document.getElementById("root")!).render(
           publishableKey={PUBLISHABLE_KEY}
         >
           {/* use this for production */}
-          {/* <LiveblocksProvider authEndpoint="http://localhost:3000/api/auth">
+          {/* <LiveblocksProvider authEndpoint="https://devsync-taek.onrender.com/api/auth">
             <App />
           </LiveblocksProvider> */}
 

@@ -7,7 +7,7 @@ const useSaveProjectOnExit = (projectId: string, html: string, css: string, js: 
   useEffect(() => {
     const saveProject = async (): Promise<void> => {
       try {
-        await fetch(`http://localhost:3000/api/projects/edit-content/${projectId}`, {
+        await fetch(`https://devsync-taek.onrender.com/api/projects/edit-content/${projectId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json"

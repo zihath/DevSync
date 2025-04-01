@@ -35,7 +35,7 @@ const ProjectDashboard = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/projects/all");
+        const response = await fetch("https://devsync-taek.onrender.com/api/projects/all");
         if (!response.ok) throw new Error('Failed to fetch projects');
         const data = await response.json();
         setProjects(data);
@@ -53,7 +53,7 @@ const ProjectDashboard = () => {
   const handleCreateProject = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/projects/create', {
+      const response = await fetch('https://devsync-taek.onrender.com/api/projects/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -224,7 +224,7 @@ const ProjectDashboard = () => {
                         className="text-destructive focus:text-destructive"
                         onClick={async () => {
                           try {
-                            const response = await fetch(`http://localhost:3000/api/projects/delete-project/${project._id}`, {
+                            const response = await fetch(`https://devsync-taek.onrender.com/api/projects/delete-project/${project._id}`, {
                               method: 'DELETE',
                               headers: {
                                 'Content-Type': 'application/json'
@@ -290,7 +290,7 @@ const ProjectDashboard = () => {
                       className="text-destructive focus:text-destructive"
                       onClick={async () => {
                         try {
-                          const response = await fetch(`http://localhost:3000/api/projects/delete-project/${project._id}`, {
+                          const response = await fetch(`https://devsync-taek.onrender.com/api/projects/delete-project/${project._id}`, {
                             method: 'DELETE',
                             headers: {
                               'Content-Type': 'application/json'

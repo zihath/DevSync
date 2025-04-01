@@ -37,7 +37,7 @@ const LiveCodeDashboard = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/rooms/create-room",
+        "https://devsync-taek.onrender.com/api/rooms/create-room",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -76,7 +76,7 @@ const LiveCodeDashboard = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/rooms/join-room/",
+        "https://devsync-taek.onrender.com/api/rooms/join-room/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -111,7 +111,7 @@ const LiveCodeDashboard = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/rooms/delete-room/${formData.delete_room_id}`,
+        `https://devsync-taek.onrender.com/api/rooms/delete-room/${formData.delete_room_id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -140,7 +140,7 @@ const LiveCodeDashboard = () => {
   const fetchCreatedRooms = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/rooms/created-rooms/${user._id}`
+        `https://devsync-taek.onrender.com/api/rooms/created-rooms/${user._id}`
       );
       const data = await response.json();
       if (response.ok) {
@@ -156,7 +156,7 @@ const LiveCodeDashboard = () => {
   const fetchJoinedRooms = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/rooms/joined-rooms/${user._id}`
+        `https://devsync-taek.onrender.com/api/rooms/joined-rooms/${user._id}`
       );
       const data = await response.json();
       console.log("data", data);

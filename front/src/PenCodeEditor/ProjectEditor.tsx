@@ -44,7 +44,7 @@ const ProjectEditor = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/projects/getproject/${projectId}`);
+        const response = await fetch(`https://devsync-taek.onrender.com/api/projects/getproject/${projectId}`);
         if (!response.ok) throw new Error("Project not found");
         const data = await response.json();
   
@@ -116,7 +116,7 @@ const ProjectEditor = () => {
     setIsSaving(true);
     
     try {
-      const response = await fetch(`http://localhost:3000/api/projects/edit-content/${projectId}`, {
+      const response = await fetch(`https://devsync-taek.onrender.com/api/projects/edit-content/${projectId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -154,7 +154,7 @@ const ProjectEditor = () => {
     }
     setIsSavingName(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/projects/edit-name/${projectId}`, {
+      const response = await fetch(`https://devsync-taek.onrender.com/api/projects/edit-name/${projectId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

@@ -20,7 +20,7 @@ const App = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/users", {
+        const response = await fetch("https://devsync-taek.onrender.com/api/users", {
           method: "GET",
           credentials: "include",
         });
@@ -45,7 +45,7 @@ const App = () => {
       try {
         // If user not found, create the user and update in db
         const response = await fetch(
-          "http://localhost:3000/api/users/create-user",
+          "https://devsync-taek.onrender.com/api/users/create-user",
           {
             method: "POST",
             headers: {
