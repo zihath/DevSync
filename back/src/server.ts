@@ -14,12 +14,26 @@ const app = express();
 app.use(express.json());
 // when we are sending request from frontend to backend we need to allow cors
 // we should mention the origin port and credentials as true because we are using cookies.
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://devsync-frontend-c92n.onrender.com",
+  "https://dev-sync-psi.vercel.app",
+];
+
 app.use(
   cors({
-    origin: "https://devsync-frontend-c92n.onrender.com",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
 // app.use(cors());
 app.use(clerkMiddleware());
 
