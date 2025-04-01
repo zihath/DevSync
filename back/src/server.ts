@@ -16,7 +16,7 @@ app.use(express.json());
 // we should mention the origin port and credentials as true because we are using cookies.
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://devsync-frontend-c92n.onrender.com",
     credentials: true,
   })
 );
