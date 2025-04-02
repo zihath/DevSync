@@ -20,6 +20,7 @@ const allowedOrigins = [
   "https://devsync-frontend-c92n.onrender.com",
   "https://dev-sync-psi.vercel.app",
   "https://dev-sync-3aoiiv655-zihaths-projects.vercel.app",
+  "dev-sync-git-main-zihaths-projects.vercel.app",
 ];
 
 app.use(
