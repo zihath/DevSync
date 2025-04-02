@@ -22,7 +22,6 @@ if (!LIVEBLOCKS_PUBLIC_KEY) {
 }
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
     <Provider store={appStore}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <ClerkProvider
@@ -43,5 +42,4 @@ createRoot(document.getElementById("root")!).render(
         </ClerkProvider>
       </ThemeProvider>
     </Provider>
-  </StrictMode>
 );
