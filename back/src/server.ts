@@ -21,6 +21,7 @@ const allowedOrigins = [
   "https://dev-sync-psi.vercel.app",
   "https://dev-sync-3aoiiv655-zihaths-projects.vercel.app",
   "dev-sync-git-main-zihaths-projects.vercel.app",
+  "dev-sync-669vhb06q-zihaths-projects.vercel.app",
 ];
 
 app.use(
