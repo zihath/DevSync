@@ -22,7 +22,6 @@ if (!LIVEBLOCKS_PUBLIC_KEY) {
 }
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
     <Provider store={appStore}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <ClerkProvider
@@ -32,7 +31,7 @@ createRoot(document.getElementById("root")!).render(
           publishableKey={PUBLISHABLE_KEY}
         >
           {/* use this for production */}
-          {/* <LiveblocksProvider authEndpoint="http://localhost:3000/api/auth">
+          {/* <LiveblocksProvider authEndpoint="https://devsync-taek.onrender.com/api/auth">
             <App />
           </LiveblocksProvider> */}
 
@@ -43,5 +42,4 @@ createRoot(document.getElementById("root")!).render(
         </ClerkProvider>
       </ThemeProvider>
     </Provider>
-  </StrictMode>
 );
