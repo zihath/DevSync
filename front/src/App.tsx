@@ -88,8 +88,14 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/live-code" element={<LiveCodeDashboard />} />
             <Route path="/live-code/:roomId" element={<LiveCodeWrapper />} />
-            <Route path = "/project-dashboard" element={<ProjectDashboard/>}></Route>
-            <Route path = "/project-editor/:projectId" element={<ProjectEditor/>}></Route>
+            <Route
+              path="/project-dashboard"
+              element={<ProjectDashboard />}
+            ></Route>
+            <Route
+              path="/project-editor/:projectId"
+              element={<ProjectEditor />}
+            ></Route>
           </Route>
         </Routes>
       </BrowserRouter>
