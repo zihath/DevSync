@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db";
 import userRoutes from "./routes/userRoutes";
 import roomRoutes from "./routes/roomRoutes";
-import ProjectRoutes from "./routes/ProjectRoutes"
+import ProjectRoutes from "./routes/ProjectRoutes";
 import { clerkMiddleware } from "@clerk/express";
 import authRoutes from "./routes/authroutes";
 dotenv.config();
@@ -16,7 +16,8 @@ app.use(express.json());
 // we should mention the origin port and credentials as true because we are using cookies.
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173", // development env
+    origin: process.env.CLIENT_URL, // productino env
     credentials: true,
   })
 );
@@ -29,7 +30,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/rooms", roomRoutes);
-app.use("/api/projects" , ProjectRoutes);
+app.use("/api/projects", ProjectRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
