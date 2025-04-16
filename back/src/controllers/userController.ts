@@ -24,7 +24,7 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
       email,
       joinedRooms: [],
       createdRooms: [],
-      projectsCreated:[],
+      projectsCreated: [],
     });
 
     await user.save();

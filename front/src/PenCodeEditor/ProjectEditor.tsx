@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/components/ui/resizable";
+import {
+  ResizablePanel,
+  ResizablePanelGroup,
+  ResizableHandle,
+} from "@/components/ui/resizable";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import CodeEditor from "./CodeEditor";
 import Preview from "./Preview";
-import { Home, ArrowLeft, Save, Settings, Play, Eye, Download, Share2, Loader2 } from "lucide-react";
+import {
+  Home,
+  ArrowLeft,
+  Save,
+  Settings,
+  Play,
+  Eye,
+  Download,
+  Share2,
+  Loader2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "@/config";
 
 const ProjectEditor = () => {
   const { projectId } = useParams();
@@ -35,19 +50,20 @@ const ProjectEditor = () => {
   // if(project){
   //   console.log(project.createdBy._id.toString());
   // }
-  
-  const isOwner = project?.createdBy?._id?.toString() === currentUserId;
 
+  const isOwner = project?.createdBy?._id?.toString() === currentUserId;
 
   // console.log(isOwner);
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/projects/getproject/${projectId}`);
+        const response = await fetch(
+          `${BASE_URL}/api/projects/getproject/${projectId}`
+        );
         if (!response.ok) throw new Error("Project not found");
         const data = await response.json();
-  
+
         setProject(data);
         setHtml(data.html || "");
         setCss(data.css || "");
@@ -58,10 +74,10 @@ const ProjectEditor = () => {
         toast.error("Failed to load project");
       }
     };
-  
+
     fetchProject();
   }, [projectId]);
-  
+
   // Auto-save for code content
   useEffect(() => {
     if (isEdited && autoUpdate && isOwner) {
@@ -69,10 +85,10 @@ const ProjectEditor = () => {
       const timer = setTimeout(() => {
         handleSave();
       }, 3000);
-      
+
       setAutoSaveTimer(timer);
     }
-    
+
     return () => {
       if (autoSaveTimer) clearTimeout(autoSaveTimer);
     };
@@ -114,29 +130,32 @@ const ProjectEditor = () => {
       return;
     }
     setIsSaving(true);
-    
+
     try {
-      const response = await fetch(`http://localhost:3000/api/projects/edit-content/${projectId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ html, css, js })
-      });
-      
+      const response = await fetch(
+        `${BASE_URL}/api/projects/edit-content/${projectId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ html, css, js }),
+        }
+      );
+
       if (!response.ok) {
         throw new Error("Error saving project");
       }
-      
+
       if (project) {
         setProject({
           ...project,
           html,
           css,
-          js
+          js,
         });
       }
-      
+
       setIsEdited(false);
       toast.success("Project saved successfully");
     } catch (error) {
@@ -154,13 +173,16 @@ const ProjectEditor = () => {
     }
     setIsSavingName(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/projects/edit-name/${projectId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ projectName })
-      });
+      const response = await fetch(
+        `${BASE_URL}/api/projects/edit-name/${projectId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ projectName }),
+        }
+      );
       if (!response.ok) {
         throw new Error("Error saving project name");
       }
@@ -175,7 +197,7 @@ const ProjectEditor = () => {
       setIsSavingName(false);
     }
   };
-  
+
   const handleDownload = () => {
     const fullHtml = `
       <!DOCTYPE html>
@@ -192,20 +214,20 @@ const ProjectEditor = () => {
       </body>
       </html>
     `.trim();
-    
-    const blob = new Blob([fullHtml], { type: 'text/html' });
+
+    const blob = new Blob([fullHtml], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `${projectName.replace(/\s+/g, '-').toLowerCase()}.html`;
+    a.download = `${projectName.replace(/\s+/g, "-").toLowerCase()}.html`;
     document.body.appendChild(a);
     a.click();
-    
+
     setTimeout(() => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }, 0);
-    
+
     toast.success("Project downloaded successfully");
   };
 
@@ -214,23 +236,23 @@ const ProjectEditor = () => {
       {/* Header Section */}
       <header className="bg-card border-b border-border h-14 flex items-center justify-between px-4 shadow-sm z-10">
         <div className="flex items-center space-x-4">
-          <Link 
-            to="/project-dashboard" 
+          <Link
+            to="/project-dashboard"
             className="text-muted-foreground hover:text-foreground transition-colors"
             title="Back"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="text-muted-foreground hover:text-foreground transition-colors"
             title="Home"
           >
             <Home className="h-5 w-5" />
           </Link>
-          
+
           <div className="h-6 border-r border-border"></div>
-          
+
           {/* Editable Project Name */}
           <input
             type="text"
@@ -239,29 +261,35 @@ const ProjectEditor = () => {
             className="text-lg font-medium truncate max-w-[200px] sm:max-w-sm bg-transparent border-none focus:outline-none"
           />
           {isNameEdited && !isSavingName && (
-            <span className="ml-2 text-xs text-muted-foreground">(unsaved)</span>
+            <span className="ml-2 text-xs text-muted-foreground">
+              (unsaved)
+            </span>
           )}
           {isSavingName && (
-            <span className="ml-2 text-xs text-muted-foreground">Saving...</span>
+            <span className="ml-2 text-xs text-muted-foreground">
+              Saving...
+            </span>
           )}
         </div>
-        
+
         <div className="flex items-center space-x-4">
           <div className="flex gap-1">
-            <button 
+            <button
               onClick={() => setAutoUpdate(!autoUpdate)}
               className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
-                autoUpdate 
-                  ? 'bg-primary/20 text-primary' 
-                  : 'bg-secondary text-muted-foreground hover:text-foreground'
+                autoUpdate
+                  ? "bg-primary/20 text-primary"
+                  : "bg-secondary text-muted-foreground hover:text-foreground"
               }`}
-              title={autoUpdate ? "Disable auto-updates" : "Enable auto-updates"}
+              title={
+                autoUpdate ? "Disable auto-updates" : "Enable auto-updates"
+              }
             >
               <Play className="h-3 w-3" />
               {autoUpdate ? "Auto" : "Manual"}
             </button>
-            
-            <button 
+
+            <button
               onClick={handleSave}
               disabled={!isOwner || isSaving || !isEdited}
               className="px-3 py-1 bg-primary hover:bg-primary/90 text-primary-foreground rounded text-xs font-medium transition-colors flex items-center gap-1 disabled:opacity-50"
@@ -279,24 +307,24 @@ const ProjectEditor = () => {
               )}
             </button>
           </div>
-          
+
           <div className="hidden sm:flex items-center space-x-3">
-            <button 
+            <button
               onClick={handleDownload}
               className="text-muted-foreground hover:text-foreground transition-colors"
               title="Download"
             >
               <Download className="h-4 w-4" />
             </button>
-            
-            <button 
+
+            <button
               className="text-muted-foreground hover:text-foreground transition-colors"
               title="Share"
             >
               <Share2 className="h-4 w-4" />
             </button>
-            
-            <button 
+
+            <button
               className="text-muted-foreground hover:text-foreground transition-colors"
               title="Settings"
             >

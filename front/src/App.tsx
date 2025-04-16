@@ -14,19 +14,24 @@ import ProjectEditor from "./PenCodeEditor/ProjectEditor";
 import { useDispatch } from "react-redux";
 import { setUser } from "./store/userSlice";
 import { AppDispatch } from "./store/appStore";
+import { BASE_URL } from "./config";
+
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useUser();
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/users", {
+        console.log(BASE_URL);
+        const response = await fetch(`${BASE_URL}/api/users`, {
           method: "GET",
           credentials: "include",
         });
         console.log("at auth handler response of fetch user");
-
+        console.log("RES 1: ");
+        console.log(response);
         const res = await response.json();
+        console.log("RES 2: ");
         console.log("res", res);
         if (res.message == "User found") {
           console.log("User already exists, skipping creation.");
@@ -44,22 +49,19 @@ const App = () => {
       if (!user) return;
       try {
         // If user not found, create the user and update in db
-        const response = await fetch(
-          "http://localhost:3000/api/users/create-user",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            // sending the details from the clerk user object to backend.
-            // we can replace the clerk with custom signup in future.
-            body: JSON.stringify({
-              username: user.fullName,
-              email: user.primaryEmailAddress?.emailAddress,
-            }),
-          }
-        );
+        const response = await fetch(`${BASE_URL}/api/users/create-user`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          // sending the details from the clerk user object to backend.
+          // we can replace the clerk with custom signup in future.
+          body: JSON.stringify({
+            username: user.fullName,
+            email: user.primaryEmailAddress?.emailAddress,
+          }),
+        });
 
         const res = await response.json();
         dispatch(setUser(res.user));
@@ -68,6 +70,7 @@ const App = () => {
         console.error("Error creating user:", error);
       }
     };
+    console.log("USER DET : ", user);
 
     if (user) {
       fetchUser();

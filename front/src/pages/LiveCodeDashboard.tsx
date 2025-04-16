@@ -19,6 +19,7 @@ import {
   removeCreatedRoom,
 } from "@/store/userSlice";
 import { Button } from "@/components/ui/button";
+import { BASE_URL } from "@/config";
 
 const LiveCodeDashboard = () => {
   const navigate = useNavigate();
@@ -36,18 +37,15 @@ const LiveCodeDashboard = () => {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/rooms/create-room",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            fileName: formData.file_name,
-            language: selectedLanguage,
-            createdBy: user._id,
-          }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}/api/rooms/create-room`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: formData.file_name,
+          language: selectedLanguage,
+          createdBy: user._id,
+        }),
+      });
       // console.log("Showing Response : ");
       const data = await response.json();
       console.log(data);
@@ -75,17 +73,14 @@ const LiveCodeDashboard = () => {
     // console.log("formData", formData);
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/rooms/join-room/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            roomId: formData.room_id,
-            userId: user._id,
-          }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}/api/rooms/join-room/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          roomId: formData.room_id,
+          userId: user._id,
+        }),
+      });
 
       const data = await response.json();
       if (response.ok) {
@@ -111,7 +106,7 @@ const LiveCodeDashboard = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/rooms/delete-room/${formData.delete_room_id}`,
+        `${BASE_URL}/api/rooms/delete-room/${formData.delete_room_id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -140,7 +135,7 @@ const LiveCodeDashboard = () => {
   const fetchCreatedRooms = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/rooms/created-rooms/${user._id}`
+        `${BASE_URL}/api/rooms/created-rooms/${user._id}`
       );
       const data = await response.json();
       if (response.ok) {
@@ -156,7 +151,7 @@ const LiveCodeDashboard = () => {
   const fetchJoinedRooms = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/rooms/joined-rooms/${user._id}`
+        `${BASE_URL}/api/rooms/joined-rooms/${user._id}`
       );
       const data = await response.json();
       console.log("data", data);
